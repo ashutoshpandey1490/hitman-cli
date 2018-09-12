@@ -27,7 +27,7 @@ public class DBConfiguration {
             if (!rset.next())
             {
                 // Table is already there. Do not initialize it again.
-                fillInitialData(stmt);
+                stmt.execute("runscript from 'classpath:init.sql'");
             }
             conn.commit();
             stmt.close();
@@ -49,17 +49,5 @@ public class DBConfiguration {
             e.printStackTrace();
         }
         return conn;
-    }
-
-    private static void fillInitialData(Statement stmt) throws SQLException {
-        stmt.execute(DBConstants.createWeaponQ);
-        stmt.execute(DBConstants.createPlayerQ);
-        stmt.execute(DBConstants.insertWeapon1);
-        stmt.execute(DBConstants.insertWeapon2);
-        stmt.execute(DBConstants.insertWeapon3);
-        stmt.execute(DBConstants.insertWeapon4);
-        stmt.execute(DBConstants.insertWeapon5);
-        stmt.execute(DBConstants.insertWeapon6);
-        stmt.execute(DBConstants.insertWeapon7);
     }
 }

@@ -5,7 +5,8 @@ package com.assignment.hitman.vo;
  */
 public class Player {
 
-    // TO-DO: think of to store metadata as well like lastUpdated, createdTime??
+    // TODO: think of to store metadata as well like lastUpdated, createdTime??
+    // TODO: Make it builder pattern
     private Integer id;
     private String name;
     private Integer money;
