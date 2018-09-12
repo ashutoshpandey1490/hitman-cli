@@ -68,12 +68,9 @@ public class Weapon {
     @Override
     public String toString() {
         return "Weapon{" +
-                "id=" + id +
-                ", type=" + type.getName() +
-                ", name='" + name + '\'' +
-                ", price=$" + price +
-                ", level=" + level +
-                ", hitValue=" + hitValue +
+                "  Type=" + type.getName() +
+                ", Name='" + name + '\'' +
+                ", Price=$" + price +
                 '}';
     }
 

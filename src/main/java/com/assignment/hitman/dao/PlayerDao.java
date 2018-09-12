@@ -9,8 +9,8 @@ import java.util.List;
  * @author ashutoshp
  */
 public interface PlayerDao {
-    public List<Player> getAllPlayers();
-    public Player getPlayerByName();
-    public void createNewPlayer(Player player) throws SQLException;
-    public void updateExistingPlayer(Player player);
+     List<Player> getAllPlayers();
+     Player getPlayerByName();
+     void createNewPlayer(Player player) throws SQLException;
+     void updateExistingPlayer(Player player);
 }

@@ -12,14 +12,26 @@ public class Player {
     private Integer money;
     private Integer health;
     private Integer level;
-    private Integer weapon_id;
+    private Integer weaponId;
+    private Weapon currentWeapon;
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                ", name='" + name + '\'' +
+                ", money=" + money +
+                ", health=" + health +
+                ", level=" + level +
+                ", weaponName=" + currentWeapon.getName() +
+                '}';
+    }
 
     public Player(String name) {
         this.name = name;
         this.money = 150;
         this.health = 100;
         this.level = 1;
-        this.weapon_id = 2;
+        this.weaponId = 2;
     }
 
     public Integer getId() {
@@ -67,12 +79,21 @@ public class Player {
         return this;
     }
 
-    public Integer getWeapon_id() {
-        return weapon_id;
+    public Integer getWeaponId() {
+        return weaponId;
     }
 
-    public Player setWeapon_id(Integer weapon_id) {
-        this.weapon_id = weapon_id;
+    public Player setWeaponId(Integer weaponId) {
+        this.weaponId = weaponId;
+        return this;
+    }
+
+    public Weapon getCurrentWeapon() {
+        return currentWeapon;
+    }
+
+    public Player setCurrentWeapon(Weapon currentWeapon) {
+        this.currentWeapon = currentWeapon;
         return this;
     }
 }

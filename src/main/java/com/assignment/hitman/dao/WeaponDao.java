@@ -9,5 +9,6 @@ import java.util.List;
  * @author ashutoshp
  */
 public interface WeaponDao {
-    public List<Weapon> getAllWeapons() throws SQLException;
+     List<Weapon> getAllWeapons() throws SQLException;
+     Weapon getWeaponById(Integer weaponId) throws SQLException;
 }
