@@ -10,11 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * @author ashutoshp
- */
+/** @author ashutoshp */
 public class PlayerDaoImpl implements PlayerDao {
-
 
     @Override
     public List<Player> getAllPlayers() {
@@ -28,8 +25,8 @@ public class PlayerDaoImpl implements PlayerDao {
 
     @Override
     public void createNewPlayer(Player player) throws SQLException {
-        try(Connection conn = DBConfiguration.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(DBConstants.PLAYER_INSERT_SQL);) {
+        try (Connection conn = DBConfiguration.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(DBConstants.PLAYER_INSERT_SQL); ) {
             stmt.setString(1, player.getName());
             stmt.setInt(2, player.getMoney());
             stmt.setInt(3, player.getHealth());
@@ -39,8 +36,8 @@ public class PlayerDaoImpl implements PlayerDao {
             if (updatedRows == 0) {
                 throw new SQLException("Player could not be created");
             }
-            try(ResultSet resultSet = stmt.getGeneratedKeys()) {
-                if(resultSet.next()){
+            try (ResultSet resultSet = stmt.getGeneratedKeys()) {
+                if (resultSet.next()) {
                     player.setId(resultSet.getInt(1));
                 }
             }
@@ -52,7 +49,7 @@ public class PlayerDaoImpl implements PlayerDao {
     @Override
     public void updateExistingPlayer(Player player) {
         try (Connection conn = DBConfiguration.getConnection();
-                        PreparedStatement stmt = conn.prepareStatement(DBConstants.PLAYER_UPDATE_SQL);){
+             PreparedStatement stmt = conn.prepareStatement(DBConstants.PLAYER_UPDATE_SQL); ) {
             stmt.setString(1, player.getName());
             stmt.setInt(2, player.getMoney());
             stmt.setInt(3, player.getHealth());
@@ -60,8 +57,7 @@ public class PlayerDaoImpl implements PlayerDao {
             stmt.setInt(5, player.getWeaponId());
             stmt.setInt(6, player.getId());
             stmt.executeUpdate();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

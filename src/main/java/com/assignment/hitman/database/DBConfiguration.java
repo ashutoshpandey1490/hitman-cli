@@ -2,9 +2,7 @@ package com.assignment.hitman.database;
 
 import java.sql.*;
 
-/**
- * @author ashutoshp
- */
+/** @author ashutoshp */
 public class DBConfiguration {
 
     // JDBC driver name and database URL
@@ -20,22 +18,18 @@ public class DBConfiguration {
         Statement stmt = null;
         try {
             Class.forName(JDBC_DRIVER);
-            conn = DriverManager.getConnection(DB_URL,USER,PASS);
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
             stmt = conn.createStatement();
-            ResultSet rset = conn.getMetaData().getTables(null, null,
-                    "WEAPONS", null);
-            if (!rset.next())
-            {
+            ResultSet rset = conn.getMetaData().getTables(null, null, "WEAPONS", null);
+            if (!rset.next()) {
                 // Table is already there. Do not initialize it again.
                 stmt.execute("runscript from 'classpath:init.sql'");
             }
             conn.commit();
             stmt.close();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -43,9 +37,8 @@ public class DBConfiguration {
     public static Connection getConnection() {
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection(DB_URL,USER,PASS);
-        }
-        catch (SQLException e) {
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return conn;

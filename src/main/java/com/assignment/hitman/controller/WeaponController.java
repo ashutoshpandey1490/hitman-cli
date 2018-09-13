@@ -18,9 +18,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-/**
- * @author ashutoshp
- */
+/** @author ashutoshp */
 public class WeaponController {
 
     private Writer writer = WriterFactory.getWriter();
@@ -31,32 +29,42 @@ public class WeaponController {
         List<Weapon> weaponsList = weaponDao.getAllWeapons();
         writer.writeInfoMsg(MessageConstants.WEAPON_BUY_MSG);
         // TODO - can we put it one place?
-        IntStream.range(0, weaponsList.size()).forEach(i -> writer.writeInputMsg(weaponsList.get(i).getId()+ " - " +
-                weaponsList.get(i).toString()));
-        writer.writeInputMsg(weaponsList.size()+1+" - Go back");
+        IntStream.range(0, weaponsList.size())
+                .forEach(
+                        i ->
+                                writer.writeInputMsg(
+                                        weaponsList.get(i).getId() + " - " + weaponsList.get(i).toString()));
+        writer.writeInputMsg(weaponsList.size() + 1 + " - Go back");
         int input = reader.readInt();
-        boolean isValidInput = weaponsList.stream().map(weapon -> weapon.getId()).collect(Collectors.toList()).contains(input);
-        if(isValidInput){
+        boolean isValidInput =
+                weaponsList
+                        .stream()
+                        .map(weapon -> weapon.getId())
+                        .collect(Collectors.toList())
+                        .contains(input);
+        if (isValidInput) {
             Weapon requiredWeapon = weaponsList.get(input - 1);
-            if(player.getMoney() >= requiredWeapon.getPrice()) {
+            if (player.getMoney() >= requiredWeapon.getPrice()) {
                 int moneyLeft = player.getMoney() - requiredWeapon.getPrice();
                 player.setMoney(moneyLeft);
                 player.setCurrentWeapon(requiredWeapon);
                 PlayerDao playerDao = new PlayerDaoImpl();
                 playerDao.updateExistingPlayer(player);
-                writer.writeInfoMsg(MessageConstants.WEAPON_BUY_SUCC_MSG, requiredWeapon.getName(), requiredWeapon.getPrice(), moneyLeft);
+                writer.writeInfoMsg(
+                        MessageConstants.WEAPON_BUY_SUCC_MSG,
+                        requiredWeapon.getName(),
+                        requiredWeapon.getPrice(),
+                        moneyLeft);
                 PlayerController playerController = new PlayerController();
                 playerController.startJourney(player);
-            }
-            else {
+            } else {
                 writer.writeErrorMsg(MessageConstants.INSUFFICIENT_BALANCE, player.getMoney());
                 buyWeapon(player);
             }
-        } else if(input == weaponsList.size()+1) {
+        } else if (input == weaponsList.size() + 1) {
             PlayerController playerController = new PlayerController();
             playerController.startJourney(player);
-        }
-        else {
+        } else {
             writer.writeErrorMsg(MessageConstants.INVALID_INPUT);
             buyWeapon(player);
         }
@@ -66,7 +74,8 @@ public class WeaponController {
         WeaponDao weaponDao = new WeaponDaoImpl();
         List<Weapon> weaponsList = weaponDao.getWeaponByLevel(user.getLevel());
         Random random = new Random();
-        int max = weaponsList.size() -1; int min = 0;
+        int max = weaponsList.size() - 1;
+        int min = 0;
         int systemWeaponId = random.nextInt((max - min) + 1) + min;
         return weaponsList.get(systemWeaponId);
     }

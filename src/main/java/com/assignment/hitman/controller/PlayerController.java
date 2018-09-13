@@ -16,9 +16,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
-/**
- * @author ashutoshp
- */
+/** @author ashutoshp */
 public class PlayerController {
 
     private Writer writer = WriterFactory.getWriter();
@@ -43,10 +41,12 @@ public class PlayerController {
         journeyOptions.add("Buy new weapon");
         journeyOptions.add("View player");
         journeyOptions.add("Exit");
-        IntStream.range(0, journeyOptions.size()).forEach(i -> writer.writeInputMsg(i + 1 + " - " + journeyOptions.get(i)));
+        IntStream.range(0, journeyOptions.size())
+                .forEach(i -> writer.writeInputMsg(i + 1 + " - " + journeyOptions.get(i)));
         int input = reader.readInt();
         switch (input) {
-            case 1: {
+            case 1:
+            {
                 writer.writeInfoMsg(MessageConstants.START_FIGHT_MSG);
                 Player systemPlayer = initializeSystemPlayer(player);
                 player = initializePlayer(player);
@@ -54,20 +54,24 @@ public class PlayerController {
                 startFight(player, systemPlayer);
                 break;
             }
-            case 2: {
+            case 2:
+            {
                 WeaponController weaponController = new WeaponController();
                 weaponController.buyWeapon(player);
                 break;
             }
-            case 3: {
+            case 3:
+            {
                 viewPlayer(player);
                 break;
             }
-            case 4: {
+            case 4:
+            {
                 GameUtils.stopGame();
                 break;
             }
-            default: {
+            default:
+            {
                 writer.writeErrorMsg(MessageConstants.INVALID_INPUT);
                 startJourney(player);
             }
@@ -80,9 +84,10 @@ public class PlayerController {
         writer.writeInfoMsg(MessageConstants.PLAYER_HEALTH, player.getHealth());
         int input = reader.readInt();
         switch (input) {
-            case 1: {
+            case 1:
+            {
                 // For resume purpose
-                //systemPlayer.setHealth(player.getOpponentHealth());
+                // systemPlayer.setHealth(player.getOpponentHealth());
                 // TODO- getter/setter should be synchronized ??
                 if (player.getHealth() <= 0) {
                     writer.writeInfoMsg("You have lost..");
@@ -94,8 +99,9 @@ public class PlayerController {
                 } else {
                     int health = systemPlayer.getHealth() - player.getCurrentWeapon().getHitValue();
                     systemPlayer.setHealth(health);
-                    writer.writeInfoMsg("You hit the enemy..Enemy health is now "+(health <= 0 ? 0 : health));
-                    if(health <= 0) {
+                    writer.writeInfoMsg(
+                            "You hit the enemy..Enemy health is now " + (health <= 0 ? 0 : health));
+                    if (health <= 0) {
                         writer.writeInfoMsg("You have Won. Level completed.");
                         setHasPlayerWon();
                         upgradeLevel(player);
@@ -105,12 +111,14 @@ public class PlayerController {
                 }
                 break;
             }
-            case 2: {
+            case 2:
+            {
                 writer.writeInputMsg(MessageConstants.SAVE_PROGRESS);
                 saveProgress(player, systemPlayer);
                 break;
             }
-            default: {
+            default:
+            {
                 writer.writeErrorMsg(MessageConstants.INVALID_INPUT);
                 startFight(player, systemPlayer);
             }
@@ -118,36 +126,39 @@ public class PlayerController {
     }
 
     public void startSystemPlayerJouney(Player userPlayer, Player systemPlayer) {
-        Runnable runnable = () -> {
-            // Initial delay because player/user must have some time to read instructions
-            try {
-                TimeUnit.SECONDS.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            while (userPlayer.getHealth() > 0 && !hasPlayerWon) {
-                try {
-                    Thread.sleep(1000);
-                    int health = userPlayer.getHealth() - systemPlayer.getCurrentWeapon().getHitValue();
-                    writer.writeInfoMsg("You got hit by the enemy..Health is now " + (health <= 0 ? 0 : health));
-                    userPlayer.setHealth(health);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            if(!hasPlayerWon){
-                writer.writeInfoMsg("You have lost..");
-            }
-        };
-        //ScheduledExecutorService pool = Executors.newSingleThreadScheduledExecutor();
-        //pool.schedule(runnable, 2, TimeUnit.SECONDS);
+        Runnable runnable =
+                () -> {
+                    // Initial delay because player/user must have some time to read instructions
+                    try {
+                        TimeUnit.SECONDS.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    while (userPlayer.getHealth() > 0 && !hasPlayerWon) {
+                        try {
+                            Thread.sleep(1000);
+                            int health = userPlayer.getHealth() - systemPlayer.getCurrentWeapon().getHitValue();
+                            writer.writeInfoMsg(
+                                    "You got hit by the enemy..Health is now " + (health <= 0 ? 0 : health));
+                            userPlayer.setHealth(health);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (!hasPlayerWon) {
+                        writer.writeInfoMsg("You have lost..");
+                    }
+                };
+        // ScheduledExecutorService pool = Executors.newSingleThreadScheduledExecutor();
+        // pool.schedule(runnable, 2, TimeUnit.SECONDS);
         new Thread(runnable, "SystemPlayer").start();
     }
 
     public void saveProgress(Player player, Player systemPlayer) {
         String answer = reader.readString();
         switch (answer) {
-            case "y": {
+            case "y":
+            {
                 PlayerDao playerDao = new PlayerDaoImpl();
                 player.setOpponentHealth(systemPlayer.getHealth());
                 player.setOpponentWeaponId(systemPlayer.getOpponentWeaponId());
@@ -155,10 +166,12 @@ public class PlayerController {
                 writer.writeInfoMsg(MessageConstants.PLAYER_SAVED);
                 GameUtils.stopGame();
             }
-            case "n": {
+            case "n":
+            {
                 GameUtils.stopGame();
             }
-            default: {
+            default:
+            {
                 GameUtils.stopGame();
             }
         }
@@ -171,11 +184,13 @@ public class PlayerController {
         writer.writeInfoMsg("1 - Go back");
         int input = reader.readInt();
         switch (input) {
-            case 1: {
+            case 1:
+            {
                 startJourney(player);
                 break;
             }
-            default: {
+            default:
+            {
                 writer.writeErrorMsg(MessageConstants.INVALID_INPUT);
                 viewPlayer(player);
                 break;
@@ -195,7 +210,7 @@ public class PlayerController {
 
     public Player initializePlayer(Player player) throws SQLException {
         // If player is not having weaponData
-        if(player.getCurrentWeapon() == null) {
+        if (player.getCurrentWeapon() == null) {
             WeaponController weaponController = new WeaponController();
             player.setCurrentWeapon(weaponController.getWeaponById(player.getWeaponId()));
         }
@@ -207,17 +222,21 @@ public class PlayerController {
         writer.writeInputMsg(MessageConstants.EXIT);
         Integer input = reader.readInt();
         switch (input) {
-            case 1 : {
-                Player newPlayer = new Player(player.getName())
-                        .setId(player.getId())
-                        .setCurrentWeapon(player.getCurrentWeapon());
+            case 1:
+            {
+                Player newPlayer =
+                        new Player(player.getName())
+                                .setId(player.getId())
+                                .setCurrentWeapon(player.getCurrentWeapon());
 
                 startJourney(newPlayer);
             }
-            case 2 : {
+            case 2:
+            {
                 GameUtils.stopGame();
             }
-            default: {
+            default:
+            {
                 writer.writeErrorMsg(MessageConstants.INVALID_INPUT);
                 continueGame(player);
             }
@@ -225,11 +244,11 @@ public class PlayerController {
     }
 
     public void upgradeLevel(Player player) throws SQLException {
-        if(player.getLevel() == 3){
+        if (player.getLevel() == 3) {
             writer.writeInfoMsg(MessageConstants.WON_SERIES);
             GameUtils.stopGame();
         }
-        //TODO - can level be an enum with all the information?
+        // TODO - can level be an enum with all the information?
         Integer newLevel = player.getLevel() + 1;
         Integer money = player.getMoney() + 1000;
         player.setLevel(newLevel);

@@ -2,9 +2,7 @@ package com.assignment.hitman.reader;
 
 import java.util.Scanner;
 
-/**
- * @author ashutoshp
- */
+/** @author ashutoshp */
 public class ConsoleReader implements Reader {
 
     private static Scanner scanner = new Scanner(System.in);
@@ -21,6 +19,6 @@ public class ConsoleReader implements Reader {
 
     @Override
     public void dispose() {
-      scanner.close();
+        scanner.close();
     }
 }

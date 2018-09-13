@@ -7,9 +7,7 @@ import com.assignment.hitman.writer.WriterFactory;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author ashutoshp
- */
+/** @author ashutoshp */
 public class GameUtils {
 
     private static Reader reader = ReaderFactory.getReader();

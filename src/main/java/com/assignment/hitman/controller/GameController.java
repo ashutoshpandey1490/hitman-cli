@@ -9,30 +9,31 @@ import com.assignment.hitman.writer.WriterFactory;
 
 import java.sql.SQLException;
 
-/**
- * @author ashutoshp
- */
+/** @author ashutoshp */
 public class GameController {
 
-    Writer writer = WriterFactory.getWriter();
-    Reader reader = ReaderFactory.getReader();
+  Writer writer = WriterFactory.getWriter();
+  Reader reader = ReaderFactory.getReader();
 
-    public void startGame() throws SQLException {
-        writer.writeInputMsg(MessageConstants.START);
-        writer.writeInputMsg(MessageConstants.EXIT);
-        int input = reader.readInt();
-        switch (input) {
-            case 1: {
-                PlayerController playerController = new PlayerController();
-                playerController.createPlayer();
-            }
-            case 2: {
-                GameUtils.stopGame();
-            }
-            default: {
-                writer.writeErrorMsg(MessageConstants.INVALID_INPUT);
-                startGame();
-            }
+  public void startGame() throws SQLException {
+    writer.writeInputMsg(MessageConstants.START);
+    writer.writeInputMsg(MessageConstants.EXIT);
+    int input = reader.readInt();
+    switch (input) {
+      case 1:
+        {
+          PlayerController playerController = new PlayerController();
+          playerController.createPlayer();
+        }
+      case 2:
+        {
+          GameUtils.stopGame();
+        }
+      default:
+        {
+          writer.writeErrorMsg(MessageConstants.INVALID_INPUT);
+          startGame();
         }
     }
+  }
 }

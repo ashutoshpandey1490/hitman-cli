@@ -1,8 +1,6 @@
 package com.assignment.hitman.writer;
 
-/**
- * @author ashutoshp
- */
+/** @author ashutoshp */
 public class WriterFactory {
 
     public static Writer getWriter() {

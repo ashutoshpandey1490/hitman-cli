@@ -1,8 +1,6 @@
 package com.assignment.hitman.util;
 
-/**
- * @author ashutoshp
- */
+/** @author ashutoshp */
 public interface ColorConstants {
 
      String ANSI_RESET = "\u001B[0m";

@@ -1,8 +1,6 @@
 package com.assignment.hitman.reader;
 
-/**
- * @author ashutoshp
- */
+/** @author ashutoshp */
 public class ReaderFactory {
 
     public static Reader getReader() {

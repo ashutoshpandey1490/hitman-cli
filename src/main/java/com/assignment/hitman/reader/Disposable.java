@@ -1,8 +1,6 @@
 package com.assignment.hitman.reader;
 
-/**
- * @author ashutoshp
- */
+/** @author ashutoshp */
 @FunctionalInterface
 public interface Disposable {
     void dispose();

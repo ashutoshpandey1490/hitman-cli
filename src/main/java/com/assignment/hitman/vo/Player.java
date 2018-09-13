@@ -1,8 +1,6 @@
 package com.assignment.hitman.vo;
 
-/**
- * @author ashutoshp
- */
+/** @author ashutoshp */
 public class Player {
 
     // TODO: think of to store metadata as well like lastUpdated, createdTime??
@@ -14,19 +12,25 @@ public class Player {
     private Integer level;
     private Integer weaponId;
     private Weapon currentWeapon;
-    //TODO- can we make Opponent an inner class?
+    // TODO- can we make Opponent an inner class?
     private Integer opponentHealth = 80;
     private Integer opponentWeaponId;
 
     @Override
     public String toString() {
-        return "Player{" +
-                "  name='" + name + '\'' +
-                ", money=" + money +
-                ", health=" + health +
-                ", level=" + level +
-                ", weaponName=" + currentWeapon.getName() +
-                '}';
+        return "Player{"
+                + "  name='"
+                + name
+                + '\''
+                + ", money="
+                + money
+                + ", health="
+                + health
+                + ", level="
+                + level
+                + ", weaponName="
+                + currentWeapon.getName()
+                + '}';
     }
 
     public Player(String name) {

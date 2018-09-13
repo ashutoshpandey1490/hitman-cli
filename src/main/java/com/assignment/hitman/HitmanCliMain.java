@@ -8,9 +8,7 @@ import com.assignment.hitman.writer.WriterFactory;
 
 import java.sql.SQLException;
 
-/**
- * @author ashutoshp
- */
+/** @author ashutoshp */
 public class HitmanCliMain {
 
     public static void main(String[] args) throws SQLException {

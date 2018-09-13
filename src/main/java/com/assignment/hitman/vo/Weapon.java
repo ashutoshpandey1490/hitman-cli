@@ -5,9 +5,7 @@ import com.assignment.hitman.util.WeaponType;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @author ashutoshp
- */
+/** @author ashutoshp */
 public class Weapon {
     private Integer id;
     private WeaponType type;
@@ -67,11 +65,15 @@ public class Weapon {
 
     @Override
     public String toString() {
-        return "Weapon{" +
-                "  Type=" + type.getName() +
-                ", Name='" + name + '\'' +
-                ", Price=$" + price +
-                '}';
+        return "Weapon{"
+                + "  Type="
+                + type.getName()
+                + ", Name='"
+                + name
+                + '\''
+                + ", Price=$"
+                + price
+                + '}';
     }
 
     public Weapon setHitValue(Integer hitValue) {
