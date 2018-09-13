@@ -14,11 +14,14 @@ public class Player {
     private Integer level;
     private Integer weaponId;
     private Weapon currentWeapon;
+    //TODO- can we make Opponent an inner class?
+    private Integer opponentHealth = 80;
+    private Integer opponentWeaponId;
 
     @Override
     public String toString() {
         return "Player{" +
-                ", name='" + name + '\'' +
+                "  name='" + name + '\'' +
                 ", money=" + money +
                 ", health=" + health +
                 ", level=" + level +
@@ -93,7 +96,26 @@ public class Player {
     }
 
     public Player setCurrentWeapon(Weapon currentWeapon) {
+        this.weaponId = currentWeapon.getId();
         this.currentWeapon = currentWeapon;
+        return this;
+    }
+
+    public Integer getOpponentHealth() {
+        return opponentHealth;
+    }
+
+    public Player setOpponentHealth(Integer opponentHealth) {
+        this.opponentHealth = opponentHealth;
+        return this;
+    }
+
+    public Integer getOpponentWeaponId() {
+        return opponentWeaponId;
+    }
+
+    public Player setOpponentWeaponId(Integer opponentWeaponId) {
+        this.opponentWeaponId = opponentWeaponId;
         return this;
     }
 }

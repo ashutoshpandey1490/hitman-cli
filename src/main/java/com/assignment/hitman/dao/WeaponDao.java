@@ -11,4 +11,5 @@ import java.util.List;
 public interface WeaponDao {
      List<Weapon> getAllWeapons() throws SQLException;
      Weapon getWeaponById(Integer weaponId) throws SQLException;
+     List<Weapon> getWeaponByLevel(Integer level) throws SQLException;
 }

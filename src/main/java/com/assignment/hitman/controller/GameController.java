@@ -2,6 +2,7 @@ package com.assignment.hitman.controller;
 
 import com.assignment.hitman.reader.Reader;
 import com.assignment.hitman.reader.ReaderFactory;
+import com.assignment.hitman.util.GameUtils;
 import com.assignment.hitman.util.MessageConstants;
 import com.assignment.hitman.writer.Writer;
 import com.assignment.hitman.writer.WriterFactory;
@@ -26,8 +27,7 @@ public class GameController {
                 playerController.createPlayer();
             }
             case 2: {
-                System.exit(0);
-                reader.dispose();
+                GameUtils.stopGame();
             }
             default: {
                 writer.writeErrorMsg(MessageConstants.INVALID_INPUT);

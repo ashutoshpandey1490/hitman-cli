@@ -14,6 +14,7 @@ import com.assignment.hitman.writer.WriterFactory;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -32,6 +33,7 @@ public class WeaponController {
         // TODO - can we put it one place?
         IntStream.range(0, weaponsList.size()).forEach(i -> writer.writeInputMsg(weaponsList.get(i).getId()+ " - " +
                 weaponsList.get(i).toString()));
+        writer.writeInputMsg(weaponsList.size()+1+" - Go back");
         int input = reader.readInt();
         boolean isValidInput = weaponsList.stream().map(weapon -> weapon.getId()).collect(Collectors.toList()).contains(input);
         if(isValidInput){
@@ -39,7 +41,7 @@ public class WeaponController {
             if(player.getMoney() >= requiredWeapon.getPrice()) {
                 int moneyLeft = player.getMoney() - requiredWeapon.getPrice();
                 player.setMoney(moneyLeft);
-                player.setWeaponId(requiredWeapon.getId());
+                player.setCurrentWeapon(requiredWeapon);
                 PlayerDao playerDao = new PlayerDaoImpl();
                 playerDao.updateExistingPlayer(player);
                 writer.writeInfoMsg(MessageConstants.WEAPON_BUY_SUCC_MSG, requiredWeapon.getName(), requiredWeapon.getPrice(), moneyLeft);
@@ -50,10 +52,27 @@ public class WeaponController {
                 writer.writeErrorMsg(MessageConstants.INSUFFICIENT_BALANCE, player.getMoney());
                 buyWeapon(player);
             }
+        } else if(input == weaponsList.size()+1) {
+            PlayerController playerController = new PlayerController();
+            playerController.startJourney(player);
         }
         else {
             writer.writeErrorMsg(MessageConstants.INVALID_INPUT);
             buyWeapon(player);
         }
+    }
+
+    public Weapon getSystemWeapon(Player user) throws SQLException {
+        WeaponDao weaponDao = new WeaponDaoImpl();
+        List<Weapon> weaponsList = weaponDao.getWeaponByLevel(user.getLevel());
+        Random random = new Random();
+        int max = weaponsList.size() -1; int min = 0;
+        int systemWeaponId = random.nextInt((max - min) + 1) + min;
+        return weaponsList.get(systemWeaponId);
+    }
+
+    public Weapon getWeaponById(Integer weaponId) throws SQLException {
+        WeaponDao weaponDao = new WeaponDaoImpl();
+        return weaponDao.getWeaponById(weaponId);
     }
 }
