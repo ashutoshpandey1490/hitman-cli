@@ -2,6 +2,7 @@ package com.assignment.hitman.controller;
 
 import com.assignment.hitman.dao.PlayerDao;
 import com.assignment.hitman.dao.PlayerDaoImpl;
+import com.assignment.hitman.exception.PlayerAlreadyExistException;
 import com.assignment.hitman.reader.Reader;
 import com.assignment.hitman.reader.ReaderFactory;
 import com.assignment.hitman.util.GameUtils;
@@ -27,17 +28,32 @@ public class PlayerController {
     private AtomicBoolean isInterrupted = new AtomicBoolean(false);
 
     public void createPlayer() throws SQLException {
-        writer.writeInputMsg(MessageConstants.CREATE_PLAYER);
+        writer.writeInputMsg(MessageConstants.ROLE_PLAYER);
         String playerName = reader.readString();
         Player newPlayer = new Player(playerName);
+        if(!isPlayerAlreadyExists(newPlayer)) {
+            writer.writeInfoMsg("The Player has been created");
+            startJourney(newPlayer);
+        } else {
+            GameController gameController = new GameController();
+            gameController.resumeGame();
+        }
+    }
+
+    private boolean isPlayerAlreadyExists(Player newPlayer) throws SQLException {
+        Boolean result = false;
         PlayerDao playerDao = new PlayerDaoImpl();
-        playerDao.createNewPlayer(newPlayer);
-        writer.writeInfoMsg("Player has been created");
-        startJourney(newPlayer);
+        try {
+            playerDao.createNewPlayer(newPlayer);
+        } catch(PlayerAlreadyExistException ex) {
+            writer.writeErrorMsg(ex.getMessage());
+            result = true;
+        }
+        return result;
     }
 
     public void resumeWithPlayer() throws SQLException {
-        writer.writeInputMsg(MessageConstants.CREATE_PLAYER);
+        writer.writeInputMsg(MessageConstants.EXISTING_PLAYER);
         String playerName = reader.readString();
         PlayerDao playerDao = new PlayerDaoImpl();
         Player existingPlayer = playerDao.getPlayerByName(playerName);

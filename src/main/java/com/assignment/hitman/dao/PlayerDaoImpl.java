@@ -2,7 +2,9 @@ package com.assignment.hitman.dao;
 
 import com.assignment.hitman.database.DBConfiguration;
 import com.assignment.hitman.database.DBConstants;
+import com.assignment.hitman.exception.PlayerAlreadyExistException;
 import com.assignment.hitman.vo.Player;
+import org.h2.jdbc.JdbcSQLException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,7 +48,7 @@ public class PlayerDaoImpl implements PlayerDao {
   }
 
     @Override
-    public void createNewPlayer(Player player) throws SQLException {
+    public void createNewPlayer(Player player) throws PlayerAlreadyExistException, SQLException {
         try (Connection conn = DBConfiguration.getConnection();
              PreparedStatement stmt = conn.prepareStatement(DBConstants.PLAYER_INSERT_SQL); ) {
             stmt.setString(1, player.getName());
@@ -62,6 +64,10 @@ public class PlayerDaoImpl implements PlayerDao {
                 if (resultSet.next()) {
                     player.setId(resultSet.getInt(1));
                 }
+            }
+        } catch (JdbcSQLException e) {
+            if(e.getMessage().contains("PLAYERS(NAME)")) {
+                throw new PlayerAlreadyExistException(String.format("Player with the name %s already exists.", player.getName()), e);
             }
         } catch (SQLException e) {
             e.printStackTrace();

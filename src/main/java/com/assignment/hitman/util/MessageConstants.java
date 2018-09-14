@@ -6,7 +6,8 @@ public interface MessageConstants {
     String INVALID_INPUT = "Invalid input given. Please read the options carefully";
     String START = "1 - Start new journey";
     String RESUME = "2 - Resume game";
-    String CREATE_PLAYER = "Enter the player name:";
+    String EXISTING_PLAYER = "Enter the existing player name:";
+    String ROLE_PLAYER = "Let us create a Character for you. Enter the new player name:";
     String FIRE = "1 - Fire";
     String EXIT = "2 - Exit";
     // TODO - Need to rethink about this?
@@ -30,5 +31,5 @@ public interface MessageConstants {
             "Now, you are at level %s. You have won $1000 and it has been credited to your account. You must change \n"
                     + " the weapon for level %s.";
     String WON_SERIES = "Congratulations. You have won the series.";
-    String PLAYER_NOT_EXISTS = "Player with the name %s does not exists.";
+    String PLAYER_NOT_EXISTS = "Player with the name %s does not exist.";
 }
