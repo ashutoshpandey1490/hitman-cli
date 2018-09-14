@@ -2,14 +2,14 @@ package com.assignment.hitman.controller;
 
 import com.assignment.hitman.reader.Reader;
 import com.assignment.hitman.reader.ReaderFactory;
+import com.assignment.hitman.state.ResumeGame;
+import com.assignment.hitman.state.StartFresh;
 import com.assignment.hitman.util.GameUtils;
 import com.assignment.hitman.util.MessageConstants;
 import com.assignment.hitman.writer.Writer;
 import com.assignment.hitman.writer.WriterFactory;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /** @author ashutoshp */
 public class GameController {
@@ -17,7 +17,7 @@ public class GameController {
   private GameController() {}
 
   private static class GameControllerCreator {
-     private static final GameController INSTANCE = new GameController();
+    private static final GameController INSTANCE = new GameController();
   }
 
   public static GameController getInstance() {
@@ -37,52 +37,48 @@ public class GameController {
   }
 
   public void resumeGame() throws SQLException {
-    List<String> resumeGameOptions = new ArrayList<>();
-    resumeGameOptions.add(MessageConstants.START);
-    resumeGameOptions.add(MessageConstants.RESUME);
-    resumeGameOptions.add(MessageConstants.EXIT);
-    GameUtils.printOptions(resumeGameOptions);
+    GameUtils.printOptions(ResumeGame.getValues());
     int input = reader.readInt();
-    switch (input) {
-      case 1:
+    if (ResumeGame.getOptionByKey(input) == null) {
+      writer.writeErrorMsg(MessageConstants.INVALID_INPUT);
+      resumeGame();
+    }
+    switch (ResumeGame.getOptionByKey(input)) {
+      case START:
       {
         PlayerController.getInstance().createPlayer();
+        break;
       }
-      case 2:
+      case RESUME:
       {
         PlayerController.getInstance().resumeWithPlayer();
+        break;
       }
-      case 3:
+      case EXIT:
       {
         GameUtils.stopGame();
-      }
-      default:
-      {
-        writer.writeErrorMsg(MessageConstants.INVALID_INPUT);
-        resumeGame();
+        break;
       }
     }
   }
 
   private void startFresh() throws SQLException {
-    List<String> freshGameOptions = new ArrayList<>();
-    freshGameOptions.add(MessageConstants.START);
-    freshGameOptions.add(MessageConstants.EXIT);
-    GameUtils.printOptions(freshGameOptions);
+    GameUtils.printOptions(StartFresh.getValues());
     int input = reader.readInt();
-    switch (input) {
-      case 1:
+    if (StartFresh.getOptionByKey(input) == null) {
+      writer.writeErrorMsg(MessageConstants.INVALID_INPUT);
+      startFresh();
+    }
+    switch (StartFresh.getOptionByKey(input)) {
+      case START:
       {
         PlayerController.getInstance().createPlayer();
+        break;
       }
-      case 2:
+      case EXIT:
       {
         GameUtils.stopGame();
-      }
-      default:
-      {
-        writer.writeErrorMsg(MessageConstants.INVALID_INPUT);
-        startFresh();
+        break;
       }
     }
   }

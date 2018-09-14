@@ -80,8 +80,4 @@ public class Weapon {
         this.hitValue = hitValue;
         return this;
     }
-
-    public static String getAllWeaponsName(List<Weapon> weaponsList) {
-        return weaponsList.stream().map(weapon -> weapon.getName()).collect(Collectors.joining(","));
-    }
 }

@@ -3,8 +3,6 @@ package com.assignment.hitman.vo;
 /** @author ashutoshp */
 public class Player {
 
-    // TODO: think of to store metadata as well like lastUpdated, createdTime??
-    // TODO: Make it builder pattern
     private Integer id;
     private String name;
     private Integer money;
@@ -12,7 +10,6 @@ public class Player {
     private Integer level;
     private Integer weaponId;
     private Weapon currentWeapon;
-    // TODO- can we make Opponent an inner class?
     private Integer opponentHealth;
     private Integer opponentWeaponId;
 
