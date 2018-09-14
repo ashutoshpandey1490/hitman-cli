@@ -3,6 +3,7 @@ package com.assignment.hitman.dao;
 import com.assignment.hitman.database.DBConfiguration;
 import com.assignment.hitman.database.DBConstants;
 import com.assignment.hitman.exception.PlayerAlreadyExistException;
+import com.assignment.hitman.util.MessageConstants;
 import com.assignment.hitman.vo.Player;
 import org.h2.jdbc.JdbcSQLException;
 
@@ -10,15 +11,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 /** @author ashutoshp */
 public class PlayerDaoImpl implements PlayerDao {
 
-    @Override
-    public List<Player> getAllPlayers() {
-        return null;
-    }
+  private PlayerDaoImpl() {}
+
+  private static class PlayerDaoCreator {
+      private static final PlayerDao INSTANCE = new PlayerDaoImpl();
+  }
+
+  public static PlayerDao getPlayerDao() {
+      return PlayerDaoCreator.INSTANCE;
+  }
 
   @Override
   public Player getPlayerByName(String playerName) {
@@ -58,7 +63,7 @@ public class PlayerDaoImpl implements PlayerDao {
             stmt.setInt(5, player.getWeaponId());
             int updatedRows = stmt.executeUpdate();
             if (updatedRows == 0) {
-                throw new SQLException("Player could not be created");
+                throw new SQLException(MessageConstants.PLAYER_NOT_CREATED);
             }
             try (ResultSet resultSet = stmt.getGeneratedKeys()) {
                 if (resultSet.next()) {
@@ -67,7 +72,7 @@ public class PlayerDaoImpl implements PlayerDao {
             }
         } catch (JdbcSQLException e) {
             if(e.getMessage().contains("PLAYERS(NAME)")) {
-                throw new PlayerAlreadyExistException(String.format("Player with the name %s already exists.", player.getName()), e);
+                throw new PlayerAlreadyExistException(String.format(MessageConstants.PLAYER_ALREADY_EXISTS, player.getName()), e);
             }
         } catch (SQLException e) {
             e.printStackTrace();

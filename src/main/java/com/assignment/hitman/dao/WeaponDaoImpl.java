@@ -15,6 +15,16 @@ import java.util.List;
 /** @author ashutoshp */
 public class WeaponDaoImpl implements WeaponDao {
 
+    private WeaponDaoImpl(){}
+
+    private static class WeaponDaoCreator {
+        private static final WeaponDao INSTANCE = new WeaponDaoImpl();
+    }
+
+    public static WeaponDao getWeaponDao() {
+        return WeaponDaoCreator.INSTANCE;
+    }
+
     @Override
     public List<Weapon> getAllWeapons() throws SQLException {
         List<Weapon> allWeapons = new ArrayList<>();

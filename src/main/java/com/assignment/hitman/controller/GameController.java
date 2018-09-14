@@ -8,17 +8,27 @@ import com.assignment.hitman.writer.Writer;
 import com.assignment.hitman.writer.WriterFactory;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /** @author ashutoshp */
 public class GameController {
 
+  private GameController() {}
+
+  private static class GameControllerCreator {
+     private static final GameController INSTANCE = new GameController();
+  }
+
+  public static GameController getGameController() {
+    return GameControllerCreator.INSTANCE;
+  }
+
   private static final Writer writer = WriterFactory.getWriter();
   private static final Reader reader = ReaderFactory.getReader();
-  private static  PlayerController playerController = new PlayerController();
 
   public void startGame() throws SQLException {
-    PlayerController playerController = new PlayerController();
-    Integer playerCount = playerController.getCountOfPlayer();
+    Integer playerCount = PlayerController.getPlayerController().getCountOfPlayer();
     if (playerCount > 0) {
       resumeGame();
     } else {
@@ -27,18 +37,20 @@ public class GameController {
   }
 
   public void resumeGame() throws SQLException {
-    writer.writeInputMsg(MessageConstants.START);
-    writer.writeInputMsg(MessageConstants.RESUME);
-    writer.writeInputMsg(MessageConstants.EXIT_OPTION);
+    List<String> resumeGameOptions = new ArrayList<>();
+    resumeGameOptions.add(MessageConstants.START);
+    resumeGameOptions.add(MessageConstants.RESUME);
+    resumeGameOptions.add(MessageConstants.EXIT);
+    GameUtils.printOptions(resumeGameOptions);
     int input = reader.readInt();
     switch (input) {
       case 1:
       {
-        playerController.createPlayer();
+        PlayerController.getPlayerController().createPlayer();
       }
       case 2:
       {
-        playerController.resumeWithPlayer();
+        PlayerController.getPlayerController().resumeWithPlayer();
       }
       case 3:
       {
@@ -53,13 +65,15 @@ public class GameController {
   }
 
   private void startFresh() throws SQLException {
-    writer.writeInputMsg(MessageConstants.START);
-    writer.writeInputMsg(MessageConstants.EXIT);
+    List<String> freshGameOptions = new ArrayList<>();
+    freshGameOptions.add(MessageConstants.START);
+    freshGameOptions.add(MessageConstants.EXIT);
+    GameUtils.printOptions(freshGameOptions);
     int input = reader.readInt();
     switch (input) {
       case 1:
       {
-        playerController.createPlayer();
+        PlayerController.getPlayerController().createPlayer();
       }
       case 2:
       {

@@ -16,12 +16,12 @@ public enum WeaponType {
     private String name;
     private int value;
 
-    private static HashMap<Integer, WeaponType> weaponTypeHashMap;
+    private static HashMap<Integer, WeaponType> weaponTypeMap;
 
     static {
-        weaponTypeHashMap = new HashMap<>();
+        weaponTypeMap = new HashMap<>();
         Arrays.stream(WeaponType.values())
-                .forEach(weaponType -> weaponTypeHashMap.put(weaponType.getValue(), weaponType));
+                .forEach(weaponType -> weaponTypeMap.put(weaponType.getValue(), weaponType));
     }
 
     WeaponType(String name, int value) {
@@ -38,6 +38,6 @@ public enum WeaponType {
     }
 
     public static WeaponType getTypeFromValue(int value) {
-        return weaponTypeHashMap.get(value);
+        return weaponTypeMap.get(value);
     }
 }

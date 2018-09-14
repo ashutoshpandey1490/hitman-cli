@@ -11,11 +11,11 @@ import java.sql.SQLException;
 /** @author ashutoshp */
 public class HitmanCliMain {
 
+    private static final Writer writer = WriterFactory.getWriter();
+
     public static void main(String[] args) throws SQLException {
-        Writer writer = WriterFactory.getWriter();
         DBConfiguration.initializeDB();
         writer.writeInfoMsg(MessageConstants.GAME_START);
-        GameController gameController = new GameController();
-        gameController.startGame();
+        GameController.getGameController().startGame();
     }
 }

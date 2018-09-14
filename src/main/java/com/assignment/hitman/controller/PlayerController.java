@@ -16,15 +16,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.IntStream;
 
 /** @author ashutoshp */
 public class PlayerController {
 
+    private PlayerController() {}
+
+    private static class PlayerControllerCreator {
+        private static final PlayerController INSTANCE = new PlayerController();
+    }
+
+    public static PlayerController getPlayerController() {
+        return PlayerControllerCreator.INSTANCE;
+    }
+
     private static final Writer writer = WriterFactory.getWriter();
     private static final Reader reader = ReaderFactory.getReader();
-    // TODO- should it be AtomicBoolean?
-    private volatile boolean hasPlayerWon = false;
+    private AtomicBoolean hasPlayerWon = new AtomicBoolean(false);
     private AtomicBoolean isInterrupted = new AtomicBoolean(false);
 
     public void createPlayer() throws SQLException {
@@ -32,19 +40,17 @@ public class PlayerController {
         String playerName = reader.readString();
         Player newPlayer = new Player(playerName);
         if(!isPlayerAlreadyExists(newPlayer)) {
-            writer.writeInfoMsg("The Player has been created");
+            writer.writeInfoMsg(MessageConstants.PLAYER_CREATED);
             startJourney(newPlayer);
         } else {
-            GameController gameController = new GameController();
-            gameController.resumeGame();
+            GameController.getGameController().resumeGame();
         }
     }
 
     private boolean isPlayerAlreadyExists(Player newPlayer) throws SQLException {
         Boolean result = false;
-        PlayerDao playerDao = new PlayerDaoImpl();
         try {
-            playerDao.createNewPlayer(newPlayer);
+            PlayerDaoImpl.getPlayerDao().createNewPlayer(newPlayer);
         } catch(PlayerAlreadyExistException ex) {
             writer.writeErrorMsg(ex.getMessage());
             result = true;
@@ -55,41 +61,35 @@ public class PlayerController {
     public void resumeWithPlayer() throws SQLException {
         writer.writeInputMsg(MessageConstants.EXISTING_PLAYER);
         String playerName = reader.readString();
-        PlayerDao playerDao = new PlayerDaoImpl();
-        Player existingPlayer = playerDao.getPlayerByName(playerName);
+        Player existingPlayer = PlayerDaoImpl.getPlayerDao().getPlayerByName(playerName);
         if (existingPlayer == null) {
             writer.writeErrorMsg(MessageConstants.PLAYER_NOT_EXISTS, playerName);
-            GameController gameController = new GameController();
-            gameController.resumeGame();
+            GameController.getGameController().resumeGame();
         } else {
             startJourney(existingPlayer);
         }
     }
 
     public void startJourney(Player player) throws SQLException {
-        hasPlayerWon = false;
+        hasPlayerWon.set(false);
+        isInterrupted.set(false);
         List<String> journeyOptions = new ArrayList<>();
-        journeyOptions.add("Start game");
-        journeyOptions.add("Buy new weapon");
-        journeyOptions.add("View player");
-        journeyOptions.add("Exit");
-        IntStream.range(0, journeyOptions.size())
-                .forEach(i -> writer.writeInputMsg(i + 1 + " - " + journeyOptions.get(i)));
+        journeyOptions.add(MessageConstants.START_GAME);
+        journeyOptions.add(MessageConstants.NEW_WEAPON);
+        journeyOptions.add(MessageConstants.VIEW_PLAYER);
+        journeyOptions.add(MessageConstants.EXIT);
+        GameUtils.printOptions(journeyOptions);
         int input = reader.readInt();
         switch (input) {
             case 1:
             {
                 writer.writeInfoMsg(MessageConstants.START_FIGHT_MSG);
-                Player systemPlayer = initializeSystemPlayer(player);
-                player = initializePlayer(player);
-                startSystemPlayerJouney(player, systemPlayer);
-                startFight(player, systemPlayer);
+                startHitting(player);
                 break;
             }
             case 2:
             {
-                WeaponController weaponController = new WeaponController();
-                weaponController.buyWeapon(player);
+                WeaponController.getWeaponController().buyWeapon(player);
                 break;
             }
             case 3:
@@ -111,28 +111,51 @@ public class PlayerController {
         }
     }
 
+    private void startHitting(Player player) throws SQLException {
+        List<String> startOptions = new ArrayList<>();
+        startOptions.add(MessageConstants.START_HITTING);
+        startOptions.add(MessageConstants.EXIT);
+        GameUtils.printOptions(startOptions);
+        int input = reader.readInt();
+        switch (input) {
+            case 1 : {
+                Player systemPlayer = initializeSystemPlayer(player);
+                player = initializePlayer(player);
+                startSystemPlayerJouney(player, systemPlayer);
+                startFight(player, systemPlayer);
+                break;
+            }
+            case 2 : {
+                writer.writeInputMsg(MessageConstants.SAVE_PROGRESS);
+                saveProgress(player, null);
+                break;
+            }
+        }
+    }
+
     public void startFight(Player player, Player systemPlayer) throws SQLException {
-        writer.writeInputMsg(MessageConstants.FIRE);
-        writer.writeInputMsg(MessageConstants.EXIT);
+        List<String> fightOptions = new ArrayList<>();
+        fightOptions.add(MessageConstants.FIRE);
+        fightOptions.add(MessageConstants.EXIT);
+        GameUtils.printOptions(fightOptions);
         writer.writeInfoMsg(MessageConstants.PLAYER_HEALTH, player.getHealth());
         int input = reader.readInt();
         switch (input) {
             case 1:
             {
                 if (player.getHealth() <= 0) {
-                    writer.writeInfoMsg("You have lost..");
+                    writer.writeInfoMsg(MessageConstants.PLAYER_LOST);
                     continueGame(player);
                 } else if (systemPlayer.getHealth() <= 0) {
-                    writer.writeInfoMsg("You have Won. Level completed.");
+                    writer.writeInfoMsg(MessageConstants.LEVEL_COMPLETED);
                     setHasPlayerWon();
                     upgradeLevel(player);
                 } else {
                     int health = systemPlayer.getHealth() - player.getCurrentWeapon().getHitValue();
                     systemPlayer.setHealth(health);
-                    writer.writeInfoMsg(
-                            "You hit the enemy..Enemy health is now " + (health <= 0 ? 0 : health));
+                    writer.writeInfoMsg(MessageConstants.HIT_THE_ENEMY,(health <= 0 ? 0 : health));
                     if (health <= 0) {
-                        writer.writeInfoMsg("You have Won. Level completed.");
+                        writer.writeInfoMsg(MessageConstants.LEVEL_COMPLETED);
                         setHasPlayerWon();
                         upgradeLevel(player);
                     } else {
@@ -159,30 +182,27 @@ public class PlayerController {
     public void startSystemPlayerJouney(Player userPlayer, Player systemPlayer) {
         Runnable runnable =
                 () -> {
-                    // Initial delay because player/user must have some time to read instructions
+                    // Initial delay to make it fare for the player
                     try {
-                        TimeUnit.SECONDS.sleep(10);
+                        TimeUnit.SECONDS.sleep(2);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    while (userPlayer.getHealth() > 0 && !hasPlayerWon && !isInterrupted.get()) {
+                    while (userPlayer.getHealth() > 0 && !hasPlayerWon.get() && !isInterrupted.get()) {
                         try {
                             int health = userPlayer.getHealth() - systemPlayer.getCurrentWeapon().getHitValue();
-                            writer.writeInfoMsg(
-                                    "You got hit by the enemy..Health is now " + (health <= 0 ? 0 : health));
+                            writer.writeInfoMsg(MessageConstants.ENEMY_HITS_YOU, (health <= 0 ? 0 : health));
                             userPlayer.setHealth(health);
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                    if (!hasPlayerWon && !isInterrupted.get()) {
-                        writer.writeInfoMsg("You have lost..");
+                    if (!hasPlayerWon.get() && !isInterrupted.get()) {
+                        writer.writeInfoMsg(MessageConstants.PLAYER_LOST);
                     }
                 };
-        // ScheduledExecutorService pool = Executors.newSingleThreadScheduledExecutor();
-        // pool.schedule(runnable, 2, TimeUnit.SECONDS);
-        new Thread(runnable, "SystemPlayer").start();
+        new Thread(runnable, MessageConstants.SYSTEM_PLAYER).start();
     }
 
     public void saveProgress(Player player, Player systemPlayer) throws SQLException {
@@ -190,19 +210,17 @@ public class PlayerController {
         switch (answer.toLowerCase()) {
             case "y":
             {
-                PlayerDao playerDao = new PlayerDaoImpl();
                 if (systemPlayer != null) {
                     player.setOpponentHealth(systemPlayer.getHealth());
                     player.setOpponentWeaponId(systemPlayer.getOpponentWeaponId());
                 }
-                playerDao.updateExistingPlayer(player);
+                PlayerDaoImpl.getPlayerDao().updateExistingPlayer(player);
                 writer.writeInfoMsg(MessageConstants.PLAYER_SAVED);
-                GameController gameController = new GameController();
-                gameController.resumeGame();
+                GameController.getGameController().resumeGame();
             }
             case "n":
             {
-                GameUtils.stopGame();
+                GameController.getGameController().resumeGame();
             }
             default:
             {
@@ -212,10 +230,11 @@ public class PlayerController {
     }
 
     public void viewPlayer(Player player) throws SQLException {
-        WeaponController weaponController = new WeaponController();
-        player.setCurrentWeapon(weaponController.getWeaponById(player.getWeaponId()));
+        player.setCurrentWeapon(WeaponController.getWeaponController().getWeaponById(player.getWeaponId()));
         writer.writeInfoMsg(player.toString());
-        writer.writeInputMsg("1 - Go back");
+        List<String> viewPlayerOptions = new ArrayList<>();
+        viewPlayerOptions.add(MessageConstants.GO_BACK);
+        GameUtils.printOptions(viewPlayerOptions);
         int input = reader.readInt();
         switch (input) {
             case 1:
@@ -233,17 +252,16 @@ public class PlayerController {
     }
 
     public Player initializeSystemPlayer(Player user) throws SQLException {
-        Player systemPlayer = new Player("system");
+        Player systemPlayer = new Player(MessageConstants.SYSTEM_PLAYER);
         // Both must be at the same level
         systemPlayer.setLevel(user.getLevel());
+        WeaponController weaponController = WeaponController.getWeaponController();
         if(user.getOpponentHealth() != null && user.getOpponentHealth() != 0) {
             systemPlayer.setHealth(user.getOpponentHealth());
             systemPlayer.setWeaponId(user.getWeaponId());
-            WeaponController controller = new WeaponController();
-            systemPlayer.setCurrentWeapon(controller.getSystemWeapon(user));
+            systemPlayer.setCurrentWeapon(weaponController.getSystemWeapon(user));
         } else {
-            WeaponController controller = new WeaponController();
-            systemPlayer.setCurrentWeapon(controller.getSystemWeapon(user));
+            systemPlayer.setCurrentWeapon(weaponController.getSystemWeapon(user));
         }
         return systemPlayer;
     }
@@ -251,8 +269,7 @@ public class PlayerController {
     public Player initializePlayer(Player player) throws SQLException {
         // If player is not having weaponData
         if (player.getCurrentWeapon() == null) {
-            WeaponController weaponController = new WeaponController();
-            player.setCurrentWeapon(weaponController.getWeaponById(player.getWeaponId()));
+            player.setCurrentWeapon(WeaponController.getWeaponController().getWeaponById(player.getWeaponId()));
         }
         return player;
     }
@@ -299,7 +316,7 @@ public class PlayerController {
     }
 
     private void setHasPlayerWon() {
-        hasPlayerWon = true;
+        hasPlayerWon.set(true);
         try {
             // Giving time to stop system player
             TimeUnit.SECONDS.sleep(1);
@@ -309,7 +326,6 @@ public class PlayerController {
     }
 
     public Integer getCountOfPlayer() {
-        PlayerDao playerDao = new PlayerDaoImpl();
-        return playerDao.getPlayerCount();
+        return PlayerDaoImpl.getPlayerDao().getPlayerCount();
     }
 }

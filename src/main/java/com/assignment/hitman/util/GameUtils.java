@@ -5,7 +5,9 @@ import com.assignment.hitman.reader.ReaderFactory;
 import com.assignment.hitman.writer.Writer;
 import com.assignment.hitman.writer.WriterFactory;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 /** @author ashutoshp */
 public class GameUtils {
@@ -22,5 +24,10 @@ public class GameUtils {
             e.printStackTrace();
         }
         System.exit(0);
+    }
+
+    public static void printOptions(List<String> options) {
+        IntStream.range(0, options.size())
+                .forEach(i -> writer.writeInputMsg(i + 1 + " - " + options.get(i)));
     }
 }

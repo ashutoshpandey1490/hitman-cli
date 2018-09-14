@@ -8,8 +8,6 @@ import java.util.List;
 
 /** @author ashutoshp */
 public interface PlayerDao {
-     List<Player> getAllPlayers();
-
      Player getPlayerByName(String playerName);
 
      void createNewPlayer(Player player) throws PlayerAlreadyExistException, SQLException;
