@@ -21,7 +21,7 @@ public class PlayerDaoImpl implements PlayerDao {
       private static final PlayerDao INSTANCE = new PlayerDaoImpl();
   }
 
-  public static PlayerDao getPlayerDao() {
+  public static PlayerDao getInstance() {
       return PlayerDaoCreator.INSTANCE;
   }
 

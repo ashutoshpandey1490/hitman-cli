@@ -1,11 +1,11 @@
 package com.assignment.hitman.controller;
 
-import com.assignment.hitman.dao.PlayerDao;
 import com.assignment.hitman.dao.PlayerDaoImpl;
 import com.assignment.hitman.exception.PlayerAlreadyExistException;
 import com.assignment.hitman.reader.Reader;
 import com.assignment.hitman.reader.ReaderFactory;
 import com.assignment.hitman.util.GameUtils;
+import com.assignment.hitman.util.Level;
 import com.assignment.hitman.util.MessageConstants;
 import com.assignment.hitman.vo.Player;
 import com.assignment.hitman.writer.Writer;
@@ -26,7 +26,7 @@ public class PlayerController {
         private static final PlayerController INSTANCE = new PlayerController();
     }
 
-    public static PlayerController getPlayerController() {
+    public static PlayerController getInstance() {
         return PlayerControllerCreator.INSTANCE;
     }
 
@@ -43,14 +43,14 @@ public class PlayerController {
             writer.writeInfoMsg(MessageConstants.PLAYER_CREATED);
             startJourney(newPlayer);
         } else {
-            GameController.getGameController().resumeGame();
+            GameController.getInstance().resumeGame();
         }
     }
 
     private boolean isPlayerAlreadyExists(Player newPlayer) throws SQLException {
         Boolean result = false;
         try {
-            PlayerDaoImpl.getPlayerDao().createNewPlayer(newPlayer);
+            PlayerDaoImpl.getInstance().createNewPlayer(newPlayer);
         } catch(PlayerAlreadyExistException ex) {
             writer.writeErrorMsg(ex.getMessage());
             result = true;
@@ -61,10 +61,10 @@ public class PlayerController {
     public void resumeWithPlayer() throws SQLException {
         writer.writeInputMsg(MessageConstants.EXISTING_PLAYER);
         String playerName = reader.readString();
-        Player existingPlayer = PlayerDaoImpl.getPlayerDao().getPlayerByName(playerName);
+        Player existingPlayer = PlayerDaoImpl.getInstance().getPlayerByName(playerName);
         if (existingPlayer == null) {
             writer.writeErrorMsg(MessageConstants.PLAYER_NOT_EXISTS, playerName);
-            GameController.getGameController().resumeGame();
+            GameController.getInstance().resumeGame();
         } else {
             startJourney(existingPlayer);
         }
@@ -89,7 +89,7 @@ public class PlayerController {
             }
             case 2:
             {
-                WeaponController.getWeaponController().buyWeapon(player);
+                WeaponController.getInstance().buyWeapon(player);
                 break;
             }
             case 3:
@@ -214,13 +214,13 @@ public class PlayerController {
                     player.setOpponentHealth(systemPlayer.getHealth());
                     player.setOpponentWeaponId(systemPlayer.getOpponentWeaponId());
                 }
-                PlayerDaoImpl.getPlayerDao().updateExistingPlayer(player);
+                PlayerDaoImpl.getInstance().updateExistingPlayer(player);
                 writer.writeInfoMsg(MessageConstants.PLAYER_SAVED);
-                GameController.getGameController().resumeGame();
+                GameController.getInstance().resumeGame();
             }
             case "n":
             {
-                GameController.getGameController().resumeGame();
+                GameController.getInstance().resumeGame();
             }
             default:
             {
@@ -230,7 +230,7 @@ public class PlayerController {
     }
 
     public void viewPlayer(Player player) throws SQLException {
-        player.setCurrentWeapon(WeaponController.getWeaponController().getWeaponById(player.getWeaponId()));
+        player.setCurrentWeapon(WeaponController.getInstance().getWeaponById(player.getWeaponId()));
         writer.writeInfoMsg(player.toString());
         List<String> viewPlayerOptions = new ArrayList<>();
         viewPlayerOptions.add(MessageConstants.GO_BACK);
@@ -255,7 +255,7 @@ public class PlayerController {
         Player systemPlayer = new Player(MessageConstants.SYSTEM_PLAYER);
         // Both must be at the same level
         systemPlayer.setLevel(user.getLevel());
-        WeaponController weaponController = WeaponController.getWeaponController();
+        WeaponController weaponController = WeaponController.getInstance();
         if(user.getOpponentHealth() != null && user.getOpponentHealth() != 0) {
             systemPlayer.setHealth(user.getOpponentHealth());
             systemPlayer.setWeaponId(user.getWeaponId());
@@ -269,7 +269,7 @@ public class PlayerController {
     public Player initializePlayer(Player player) throws SQLException {
         // If player is not having weaponData
         if (player.getCurrentWeapon() == null) {
-            player.setCurrentWeapon(WeaponController.getWeaponController().getWeaponById(player.getWeaponId()));
+            player.setCurrentWeapon(WeaponController.getInstance().getWeaponById(player.getWeaponId()));
         }
         return player;
     }
@@ -305,13 +305,12 @@ public class PlayerController {
             writer.writeInfoMsg(MessageConstants.WON_SERIES);
             GameUtils.stopGame();
         }
-        // TODO - can level be an enum with all the information?
-        Integer newLevel = player.getLevel() + 1;
-        Integer money = player.getMoney() + 1000;
-        player.setLevel(newLevel);
-        player.setMoney(money);
+        Level level = Level.getLevelFromValue(player.getLevel() + 1);
+        player.setLevel(level.getValue());
+        player.setMoney(player.getMoney() + level.getMoney());
+        player.setWeaponId(level.getDefaultWeaponId());
         player.setHealth(100);
-        writer.writeInfoMsg(MessageConstants.UPGRADE_LEVEL, newLevel, newLevel);
+        writer.writeInfoMsg(MessageConstants.UPGRADE_LEVEL, level.getValue(), level.getValue());
         startJourney(player);
     }
 
@@ -326,6 +325,6 @@ public class PlayerController {
     }
 
     public Integer getCountOfPlayer() {
-        return PlayerDaoImpl.getPlayerDao().getPlayerCount();
+        return PlayerDaoImpl.getInstance().getPlayerCount();
     }
 }

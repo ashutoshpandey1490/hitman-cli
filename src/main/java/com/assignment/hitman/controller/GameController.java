@@ -20,7 +20,7 @@ public class GameController {
      private static final GameController INSTANCE = new GameController();
   }
 
-  public static GameController getGameController() {
+  public static GameController getInstance() {
     return GameControllerCreator.INSTANCE;
   }
 
@@ -28,7 +28,7 @@ public class GameController {
   private static final Reader reader = ReaderFactory.getReader();
 
   public void startGame() throws SQLException {
-    Integer playerCount = PlayerController.getPlayerController().getCountOfPlayer();
+    Integer playerCount = PlayerController.getInstance().getCountOfPlayer();
     if (playerCount > 0) {
       resumeGame();
     } else {
@@ -46,11 +46,11 @@ public class GameController {
     switch (input) {
       case 1:
       {
-        PlayerController.getPlayerController().createPlayer();
+        PlayerController.getInstance().createPlayer();
       }
       case 2:
       {
-        PlayerController.getPlayerController().resumeWithPlayer();
+        PlayerController.getInstance().resumeWithPlayer();
       }
       case 3:
       {
@@ -73,7 +73,7 @@ public class GameController {
     switch (input) {
       case 1:
       {
-        PlayerController.getPlayerController().createPlayer();
+        PlayerController.getInstance().createPlayer();
       }
       case 2:
       {

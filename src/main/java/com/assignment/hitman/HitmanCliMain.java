@@ -16,6 +16,6 @@ public class HitmanCliMain {
     public static void main(String[] args) throws SQLException {
         DBConfiguration.initializeDB();
         writer.writeInfoMsg(MessageConstants.GAME_START);
-        GameController.getGameController().startGame();
+        GameController.getInstance().startGame();
     }
 }

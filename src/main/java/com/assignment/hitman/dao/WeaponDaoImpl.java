@@ -21,7 +21,7 @@ public class WeaponDaoImpl implements WeaponDao {
         private static final WeaponDao INSTANCE = new WeaponDaoImpl();
     }
 
-    public static WeaponDao getWeaponDao() {
+    public static WeaponDao getInstance() {
         return WeaponDaoCreator.INSTANCE;
     }
 

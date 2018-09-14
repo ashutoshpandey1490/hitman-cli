@@ -1,7 +1,6 @@
 package com.assignment.hitman.controller;
 
 import com.assignment.hitman.dao.PlayerDaoImpl;
-import com.assignment.hitman.dao.WeaponDao;
 import com.assignment.hitman.dao.WeaponDaoImpl;
 import com.assignment.hitman.reader.Reader;
 import com.assignment.hitman.reader.ReaderFactory;
@@ -26,7 +25,7 @@ public class WeaponController {
         private static final WeaponController INSTANCE = new WeaponController();
     }
 
-    public static WeaponController getWeaponController() {
+    public static WeaponController getInstance() {
         return WeaponControllerCreator.INSTANCE;
     }
 
@@ -34,7 +33,7 @@ public class WeaponController {
     private static final Reader reader = ReaderFactory.getReader();
 
     public void buyWeapon(Player player) throws SQLException {
-        List<Weapon> weaponsList = WeaponDaoImpl.getWeaponDao().getAllWeapons();
+        List<Weapon> weaponsList = WeaponDaoImpl.getInstance().getAllWeapons();
         writer.writeInfoMsg(MessageConstants.WEAPON_BUY_MSG);
         IntStream.range(0, weaponsList.size())
                 .forEach(
@@ -55,19 +54,19 @@ public class WeaponController {
                 int moneyLeft = player.getMoney() - requiredWeapon.getPrice();
                 player.setMoney(moneyLeft);
                 player.setCurrentWeapon(requiredWeapon);
-                PlayerDaoImpl.getPlayerDao().updateExistingPlayer(player);
+                PlayerDaoImpl.getInstance().updateExistingPlayer(player);
                 writer.writeInfoMsg(
                         MessageConstants.WEAPON_BUY_SUCC_MSG,
                         requiredWeapon.getName(),
                         requiredWeapon.getPrice(),
                         moneyLeft);
-                PlayerController.getPlayerController().startJourney(player);
+                PlayerController.getInstance().startJourney(player);
             } else {
                 writer.writeErrorMsg(MessageConstants.INSUFFICIENT_BALANCE, player.getMoney());
                 buyWeapon(player);
             }
         } else if (input == weaponsList.size() + 1) {
-            PlayerController.getPlayerController().startJourney(player);
+            PlayerController.getInstance().startJourney(player);
         } else {
             writer.writeErrorMsg(MessageConstants.INVALID_INPUT);
             buyWeapon(player);
@@ -81,7 +80,7 @@ public class WeaponController {
      * @throws SQLException
      */
     public Weapon getSystemWeapon(Player user) throws SQLException {
-        List<Weapon> weaponsList = WeaponDaoImpl.getWeaponDao().getWeaponByLevel(user.getLevel());
+        List<Weapon> weaponsList = WeaponDaoImpl.getInstance().getWeaponByLevel(user.getLevel());
         Random random = new Random();
         int max = weaponsList.size() - 1;
         int min = 0;
@@ -90,6 +89,6 @@ public class WeaponController {
     }
 
     public Weapon getWeaponById(Integer weaponId) throws SQLException {
-        return WeaponDaoImpl.getWeaponDao().getWeaponById(weaponId);
+        return WeaponDaoImpl.getInstance().getWeaponById(weaponId);
     }
 }

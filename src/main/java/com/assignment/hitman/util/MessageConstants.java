@@ -34,7 +34,7 @@ public interface MessageConstants {
     String CONTINUE = "1 - Play another game";
 
     String UPGRADE_LEVEL =
-            "Now, you are at level %s. You have won $1000 and it has been credited to your account. You must change \n"
+            "Now, you are at level %s. You have won $1000 and it has been credited to your account. You can change \n"
                     + " the weapon for level %s.";
     String WON_SERIES = "Congratulations. You have won the series.";
     String PLAYER_NOT_EXISTS = "Player with the name %s does not exist.";
