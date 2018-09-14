@@ -1,4 +1,4 @@
-## hitman-cli
+## Hitman-cli
 Hitman game in java based on cli
 
 1) Steps to run the application:<br />

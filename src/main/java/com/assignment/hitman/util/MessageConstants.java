@@ -5,11 +5,12 @@ public interface MessageConstants {
     String GAME_START = "Hitman game has started !!!!!!!!";
     String INVALID_INPUT = "Invalid input given. Please read the options carefully";
     String START = "1 - Start new journey";
-    // TODO- Create resume feature
-    String RESUME = "Resume";
+    String RESUME = "2 - Resume game";
     String CREATE_PLAYER = "Enter the player name:";
     String FIRE = "1 - Fire";
     String EXIT = "2 - Exit";
+    // TODO - Need to rethink about this?
+    String EXIT_OPTION = "3 - Exit";
     String SAVE_PROGRESS = "Do you want to save your progress? Press y/n";
     String START_FIGHT_MSG =
             "You will have to cross 3 levels to win this game. In first level, you will have basic weapon but \n"
@@ -29,4 +30,5 @@ public interface MessageConstants {
             "Now, you are at level %s. You have won $1000 and it has been credited to your account. You must change \n"
                     + " the weapon for level %s.";
     String WON_SERIES = "Congratulations. You have won the series.";
+    String PLAYER_NOT_EXISTS = "Player with the name %s does not exists.";
 }

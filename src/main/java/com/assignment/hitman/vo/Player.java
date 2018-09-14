@@ -13,7 +13,7 @@ public class Player {
     private Integer weaponId;
     private Weapon currentWeapon;
     // TODO- can we make Opponent an inner class?
-    private Integer opponentHealth = 80;
+    private Integer opponentHealth;
     private Integer opponentWeaponId;
 
     @Override

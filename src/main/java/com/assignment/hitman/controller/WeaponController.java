@@ -21,8 +21,8 @@ import java.util.stream.IntStream;
 /** @author ashutoshp */
 public class WeaponController {
 
-    private Writer writer = WriterFactory.getWriter();
-    private Reader reader = ReaderFactory.getReader();
+    private static final Writer writer = WriterFactory.getWriter();
+    private static final Reader reader = ReaderFactory.getReader();
 
     public void buyWeapon(Player player) throws SQLException {
         WeaponDao weaponDao = new WeaponDaoImpl();
@@ -70,6 +70,12 @@ public class WeaponController {
         }
     }
 
+    /**
+     * System user must have randomly selected weapon but it must be of same level as the player
+     * @param user
+     * @return randomly selected weapon
+     * @throws SQLException
+     */
     public Weapon getSystemWeapon(Player user) throws SQLException {
         WeaponDao weaponDao = new WeaponDaoImpl();
         List<Weapon> weaponsList = weaponDao.getWeaponByLevel(user.getLevel());

@@ -12,28 +12,64 @@ import java.sql.SQLException;
 /** @author ashutoshp */
 public class GameController {
 
-  Writer writer = WriterFactory.getWriter();
-  Reader reader = ReaderFactory.getReader();
+  private static final Writer writer = WriterFactory.getWriter();
+  private static final Reader reader = ReaderFactory.getReader();
+  private static  PlayerController playerController = new PlayerController();
 
   public void startGame() throws SQLException {
+    PlayerController playerController = new PlayerController();
+    Integer playerCount = playerController.getCountOfPlayer();
+    if (playerCount > 0) {
+      resumeGame();
+    } else {
+      startFresh();
+    }
+  }
+
+  public void resumeGame() throws SQLException {
+    writer.writeInputMsg(MessageConstants.START);
+    writer.writeInputMsg(MessageConstants.RESUME);
+    writer.writeInputMsg(MessageConstants.EXIT_OPTION);
+    int input = reader.readInt();
+    switch (input) {
+      case 1:
+      {
+        playerController.createPlayer();
+      }
+      case 2:
+      {
+        playerController.resumeWithPlayer();
+      }
+      case 3:
+      {
+        GameUtils.stopGame();
+      }
+      default:
+      {
+        writer.writeErrorMsg(MessageConstants.INVALID_INPUT);
+        resumeGame();
+      }
+    }
+  }
+
+  private void startFresh() throws SQLException {
     writer.writeInputMsg(MessageConstants.START);
     writer.writeInputMsg(MessageConstants.EXIT);
     int input = reader.readInt();
     switch (input) {
       case 1:
-        {
-          PlayerController playerController = new PlayerController();
-          playerController.createPlayer();
-        }
+      {
+        playerController.createPlayer();
+      }
       case 2:
-        {
-          GameUtils.stopGame();
-        }
+      {
+        GameUtils.stopGame();
+      }
       default:
-        {
-          writer.writeErrorMsg(MessageConstants.INVALID_INPUT);
-          startGame();
-        }
+      {
+        writer.writeErrorMsg(MessageConstants.INVALID_INPUT);
+        startFresh();
+      }
     }
   }
 }

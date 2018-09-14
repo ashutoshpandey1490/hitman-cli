@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS WEAPONS (id INTEGER PRIMARY KEY, type INT, name VARCHAR(150), price INT, level INT, hit_value INT);
 
-CREATE TABLE IF NOT EXISTS PLAYERS (id INTEGER auto_increment PRIMARY KEY, name VARCHAR(255), money INT, health INT, level INT,
-            weapon_id INT, foreign key (weapon_id) references WEAPONS(id));
+CREATE TABLE IF NOT EXISTS PLAYERS (id INTEGER auto_increment PRIMARY KEY, name VARCHAR(255) NOT NULL UNIQUE, money INT,
+health INT, level INT, weapon_id INT, opponent_health INT, opponent_weapon_id INT,
+foreign key (weapon_id) references WEAPONS(id));
 
 INSERT into WEAPONS VALUES (1, 1, 'Butcher Knife', 100, 1, 3);
 INSERT into WEAPONS VALUES (2, 2, 'Glock 17', 150, 1, 8);

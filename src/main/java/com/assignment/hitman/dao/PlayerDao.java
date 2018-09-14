@@ -9,9 +9,11 @@ import java.util.List;
 public interface PlayerDao {
      List<Player> getAllPlayers();
 
-     Player getPlayerByName();
+     Player getPlayerByName(String playerName);
 
      void createNewPlayer(Player player) throws SQLException;
 
      void updateExistingPlayer(Player player);
+
+     Integer getPlayerCount();
 }
