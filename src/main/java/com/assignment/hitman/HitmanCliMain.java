@@ -10,7 +10,11 @@ import com.assignment.hitman.writer.WriterFactory;
 import java.awt.*;
 import java.sql.SQLException;
 
-/** @author ashutoshp */
+/**
+ * Main class of the application.
+ *
+ * @author ashutoshp
+ */
 public class HitmanCliMain {
 
     private static final Writer writer = WriterFactory.getWriter();

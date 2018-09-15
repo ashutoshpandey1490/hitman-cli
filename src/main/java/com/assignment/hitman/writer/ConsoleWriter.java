@@ -2,7 +2,13 @@ package com.assignment.hitman.writer;
 
 import static com.assignment.hitman.util.ColorConstants.*;
 
-/** @author ashutoshp */
+/**
+ * Implementation method to write to the Console. VM argument is being passed to decide on printing
+ * of colors. Windows command prompt does not support acsii colors but running the main
+ * class in IntelliJ will give you the colorful output.
+ *
+ * @author ashutoshp
+ */
 public class ConsoleWriter implements Writer {
 
     private static boolean colored = true;

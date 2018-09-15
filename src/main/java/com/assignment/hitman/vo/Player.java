@@ -1,6 +1,10 @@
 package com.assignment.hitman.vo;
 
-/** @author ashutoshp */
+/**
+ * VO for player object. Fluent builder pattern implementation.
+ *
+ * @author ashutoshp
+ */
 public class Player {
 
     private Integer id;

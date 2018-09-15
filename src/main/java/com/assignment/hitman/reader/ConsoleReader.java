@@ -2,7 +2,12 @@ package com.assignment.hitman.reader;
 
 import java.util.Scanner;
 
-/** @author ashutoshp */
+/**
+ * Actual implementation to take input from player from console. This implementation is used in
+ * entire application to make sure input mechanism is in one place.
+ *
+ * @author ashutoshp
+ */
 public class ConsoleReader implements Reader {
 
     private static Scanner scanner = new Scanner(System.in);

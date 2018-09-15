@@ -1,6 +1,10 @@
 package com.assignment.hitman.reader;
 
-/** @author ashutoshp */
+/**
+ * Factory pattern implementation to hide the details of object instantiation.
+ *
+ * @author ashutoshp
+ */
 public class ReaderFactory {
 
     public static Reader getReader() {

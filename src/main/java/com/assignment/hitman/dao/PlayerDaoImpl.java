@@ -12,48 +12,52 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/** @author ashutoshp */
+/**
+ * Class to perform all DB operations related to player. Class has been made singleton.
+ *
+ * @author ashutoshp
+ */
 public class PlayerDaoImpl implements PlayerDao {
 
-  private PlayerDaoImpl() {}
+    private PlayerDaoImpl() {}
 
-  private static class PlayerDaoCreator {
-      private static final PlayerDao INSTANCE = new PlayerDaoImpl();
-  }
+    private static class PlayerDaoCreator {
+        private static final PlayerDao INSTANCE = new PlayerDaoImpl();
+    }
 
-  public static PlayerDao getInstance() {
-      return PlayerDaoCreator.INSTANCE;
-  }
-
-  @Override
-  public Player getPlayerByName(String playerName) {
-      Player player = null;
-      try (Connection conn = DBConfiguration.getConnection();
-           PreparedStatement stmt = conn.prepareStatement(DBConstants.GET_PLAYER_SQL); ) {
-          stmt.setString(1, playerName);
-          ResultSet resultSet = stmt.executeQuery();
-          while (resultSet.next()) {
-              player =
-                      new Player(playerName)
-                              .setId(resultSet.getObject("id", Integer.class))
-                              .setName(resultSet.getObject("name", String.class))
-                              .setMoney(resultSet.getObject("money", Integer.class))
-                              .setHealth(resultSet.getObject("health", Integer.class))
-                              .setLevel(resultSet.getObject("level", Integer.class))
-                              .setWeaponId(resultSet.getObject("weapon_id", Integer.class));
-              if(resultSet.getObject("opponent_health") != null) {
-                  player.setOpponentHealth(resultSet.getObject("opponent_health", Integer.class));
-                  player.setOpponentWeaponId(resultSet.getObject("opponent_weapon_id", Integer.class));
-              }
-          }
-      } catch (SQLException e) {
-          e.printStackTrace();
-      }
-      return player;
-  }
+    public static PlayerDao getInstance() {
+        return PlayerDaoCreator.INSTANCE;
+    }
 
     @Override
-    public void createNewPlayer(Player player) throws PlayerAlreadyExistException, SQLException {
+    public Player getPlayerByName(String playerName) {
+        Player player = null;
+        try (Connection conn = DBConfiguration.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(DBConstants.GET_PLAYER_SQL); ) {
+            stmt.setString(1, playerName);
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                player =
+                        new Player(playerName)
+                                .setId(resultSet.getObject("id", Integer.class))
+                                .setName(resultSet.getObject("name", String.class))
+                                .setMoney(resultSet.getObject("money", Integer.class))
+                                .setHealth(resultSet.getObject("health", Integer.class))
+                                .setLevel(resultSet.getObject("level", Integer.class))
+                                .setWeaponId(resultSet.getObject("weapon_id", Integer.class));
+                if (resultSet.getObject("opponent_health") != null) {
+                    player.setOpponentHealth(resultSet.getObject("opponent_health", Integer.class));
+                    player.setOpponentWeaponId(resultSet.getObject("opponent_weapon_id", Integer.class));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return player;
+    }
+
+    @Override
+    public void createNewPlayer(Player player) throws PlayerAlreadyExistException {
         try (Connection conn = DBConfiguration.getConnection();
              PreparedStatement stmt = conn.prepareStatement(DBConstants.PLAYER_INSERT_SQL); ) {
             stmt.setString(1, player.getName());
@@ -71,8 +75,9 @@ public class PlayerDaoImpl implements PlayerDao {
                 }
             }
         } catch (JdbcSQLException e) {
-            if(e.getMessage().contains("PLAYERS(NAME)")) {
-                throw new PlayerAlreadyExistException(String.format(MessageConstants.PLAYER_ALREADY_EXISTS, player.getName()), e);
+            if (e.getMessage().contains("PLAYERS(NAME)")) {
+                throw new PlayerAlreadyExistException(
+                        String.format(MessageConstants.PLAYER_ALREADY_EXISTS, player.getName()), e);
             }
         } catch (SQLException e) {
             e.printStackTrace();

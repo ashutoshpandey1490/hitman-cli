@@ -7,7 +7,7 @@ import java.util.HashMap;
 public enum Level {
     LEVEL1(1, 150, 2),
     LEVEL2(2, 1000, 3),
-    LEVEL3(2, 1000, 6);
+    LEVEL3(3, 1000, 6);
 
     Integer value;
     Integer money;

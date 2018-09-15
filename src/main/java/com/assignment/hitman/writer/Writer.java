@@ -1,6 +1,10 @@
 package com.assignment.hitman.writer;
 
-/** @author ashutoshp */
+/**
+ * Interface to define methods to write to the console.
+ *
+ * @author ashutoshp
+ */
 public interface Writer {
     void writeInfoMsg(String msg, Object... obj);
 

@@ -5,7 +5,11 @@ import com.assignment.hitman.vo.Weapon;
 import java.sql.SQLException;
 import java.util.List;
 
-/** @author ashutoshp */
+/**
+ * Class to perform all DB operations related to weapons.
+ *
+ * @author ashutoshp
+ */
 public interface WeaponDao {
      List<Weapon> getAllWeapons() throws SQLException;
 

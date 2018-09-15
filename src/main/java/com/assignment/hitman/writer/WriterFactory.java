@@ -1,6 +1,10 @@
 package com.assignment.hitman.writer;
 
-/** @author ashutoshp */
+/**
+ * Factory pattern implementation to hide the details of object instantiation.
+ *
+ * @author ashutoshp
+ */
 public class WriterFactory {
 
     public static Writer getWriter() {

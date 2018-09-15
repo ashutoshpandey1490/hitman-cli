@@ -2,10 +2,11 @@ package com.assignment.hitman.vo;
 
 import com.assignment.hitman.util.WeaponType;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-/** @author ashutoshp */
+/**
+ * VO for weapon object. Fluent builder pattern implementation.
+ *
+ * @author ashutoshp
+ */
 public class Weapon {
     private Integer id;
     private WeaponType type;
