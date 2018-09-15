@@ -14,10 +14,14 @@ Hitman game in java based on cli.
 - Input validation is performed at each level.
 
 ## To generate the jar
-- mvn clean package
+- mvn clean package (You must have maven installed)
+
+## If you don't have maven installed, Don't worry. Use below commands
+- Unix users: ./mvnw clean package
+- Windows users: mvnw.cmd clean package
 
 ## To run the app in terminal.
 - java -Dcolored=false -jar target/hitman-cli-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 ## To get colorful fonts
-- Directly run the main class in 'IntelliJ'. (They have support for ascii fonts)
+- Directly run the main class in 'IntelliJ'. (They have support for ascii color codes)
