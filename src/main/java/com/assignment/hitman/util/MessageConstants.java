@@ -5,13 +5,13 @@ public interface MessageConstants {
 
     // JDBC driver name and database URL
     String JDBC_DRIVER = "org.h2.Driver";
-    String DB_URL = "jdbc:h2:~/hitmanDS";
+    String DB_URL = "jdbc:h2:tcp://localhost/~/hitmanDB";
 
     //  Database credentials
     String USER = "sa";
     String PASS = "";
 
-    String GAME_START = "Hitman game has started !!!!!!!!";
+    String GAME_START = "\n\nHitman game has started !!!!!!!!";
     String INVALID_INPUT = "Invalid input given. Please read the options carefully";
     String START = "Start new journey";
     String RESUME = "Resume game";

@@ -1,17 +1,21 @@
 package com.assignment.hitman.database;
 
 import com.assignment.hitman.util.MessageConstants;
+import org.h2.tools.Server;
 
 import java.sql.*;
 
 /** @author ashutoshp */
 public class DBConfiguration {
 
+    private static Server server;
+
     public static void initializeDB() throws SQLException {
         Connection conn = null;
         Statement stmt = null;
         try {
             Class.forName(MessageConstants.JDBC_DRIVER);
+            server = Server.createTcpServer().start();
             conn = DriverManager.getConnection(MessageConstants.DB_URL, MessageConstants.USER, MessageConstants.PASS);
             stmt = conn.createStatement();
             ResultSet rset = conn.getMetaData().getTables(null, null, "WEAPONS", null);
@@ -37,5 +41,9 @@ public class DBConfiguration {
             e.printStackTrace();
         }
         return conn;
+    }
+
+    public static void stopDB() {
+        server.stop();
     }
 }

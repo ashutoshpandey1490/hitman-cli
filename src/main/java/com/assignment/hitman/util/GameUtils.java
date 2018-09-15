@@ -1,5 +1,6 @@
 package com.assignment.hitman.util;
 
+import com.assignment.hitman.database.DBConfiguration;
 import com.assignment.hitman.reader.Reader;
 import com.assignment.hitman.reader.ReaderFactory;
 import com.assignment.hitman.writer.Writer;
@@ -16,6 +17,7 @@ public class GameUtils {
     private static Writer writer = WriterFactory.getWriter();
 
     public static void stopGame() {
+        DBConfiguration.stopDB();
         reader.dispose();
         try {
             // Giving time of 1 second to clean up resources before shutting down JVM.
