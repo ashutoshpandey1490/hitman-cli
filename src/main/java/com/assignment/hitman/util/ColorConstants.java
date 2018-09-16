@@ -1,6 +1,10 @@
 package com.assignment.hitman.util;
 
-/** @author ashutoshp */
+/**
+ * Color constants to provide color to the text.
+ *
+ * @author ashutoshp
+ */
 public interface ColorConstants {
 
      String ANSI_RESET = "\u001B[0m";

@@ -2,6 +2,7 @@ package com.assignment.hitman;
 
 import com.assignment.hitman.controller.GameController;
 import com.assignment.hitman.database.DBConfiguration;
+import com.assignment.hitman.util.GameUtils;
 import com.assignment.hitman.util.MessageConstants;
 import com.assignment.hitman.util.PrintUtils;
 import com.assignment.hitman.writer.Writer;
@@ -21,10 +22,7 @@ public class HitmanCliMain {
 
     public static void main(String[] args) throws SQLException {
         DBConfiguration.initializeDB();
-        String text = "HITMAN";
-        PrintUtils.Settings settings =
-                new PrintUtils.Settings(new Font("SansSerif", Font.BOLD, 24), text.length() * 30, 30);
-        PrintUtils.drawString("HITMAN", "*", settings);
+        GameUtils.printAscIiImage("HITMAN");
         writer.writeInfoMsg(MessageConstants.GAME_START);
         GameController.getInstance().startGame();
     }

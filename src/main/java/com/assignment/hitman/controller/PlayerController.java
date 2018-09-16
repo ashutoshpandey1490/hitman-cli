@@ -149,6 +149,7 @@ public class PlayerController {
                     continueGame(player);
                 } else if (systemPlayer.getHealth() <= 0) {
                     writer.writeInfoMsg(MessageConstants.LEVEL_COMPLETED);
+                    GameUtils.printAscIiImage(MessageConstants.WON_MSG);
                     setHasPlayerWon();
                     upgradeLevel(player);
                 } else {
@@ -157,6 +158,7 @@ public class PlayerController {
                     writer.writeInfoMsg(MessageConstants.HIT_THE_ENEMY, (health <= 0 ? 0 : health));
                     if (health <= 0) {
                         writer.writeInfoMsg(MessageConstants.LEVEL_COMPLETED);
+                        GameUtils.printAscIiImage(MessageConstants.WON_MSG);
                         setHasPlayerWon();
                         upgradeLevel(player);
                     } else {

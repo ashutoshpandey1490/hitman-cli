@@ -1,6 +1,10 @@
 package com.assignment.hitman.util;
 
-/** @author ashutoshp */
+/**
+ * Single place to define all application constants.
+ *
+ * @author ashutoshp
+ */
 public interface MessageConstants {
 
     // JDBC driver name and database URL
@@ -51,4 +55,5 @@ public interface MessageConstants {
     String PLAYER_NOT_CREATED = "Player could not be created";
     String PLAYER_ALREADY_EXISTS = "Player with the name %s already exists.";
     String START_HITTING = "Start";
+    String WON_MSG = "You have won";
 }

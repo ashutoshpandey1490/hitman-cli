@@ -1,6 +1,10 @@
 package com.assignment.hitman.database;
 
-/** @author ashutoshp */
+/**
+ * Single place to define all sql queries.
+ *
+ * @author ashutoshp
+ */
 public interface DBConstants {
 
      String PLAYER_INSERT_SQL =

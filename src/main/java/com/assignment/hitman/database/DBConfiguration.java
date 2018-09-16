@@ -5,7 +5,11 @@ import org.h2.tools.Server;
 
 import java.sql.*;
 
-/** @author ashutoshp */
+/**
+ * Class to deal with DB operations.
+ *
+ * @author ashutoshp
+ */
 public class DBConfiguration {
 
     private static Server server;
@@ -16,7 +20,9 @@ public class DBConfiguration {
         try {
             Class.forName(MessageConstants.JDBC_DRIVER);
             server = Server.createTcpServer().start();
-            conn = DriverManager.getConnection(MessageConstants.DB_URL, MessageConstants.USER, MessageConstants.PASS);
+            conn =
+                    DriverManager.getConnection(
+                            MessageConstants.DB_URL, MessageConstants.USER, MessageConstants.PASS);
             stmt = conn.createStatement();
             ResultSet rset = conn.getMetaData().getTables(null, null, "WEAPONS", null);
             if (!rset.next()) {
@@ -27,7 +33,7 @@ public class DBConfiguration {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        } finally{
+        } finally {
             conn.commit();
             stmt.close();
         }
@@ -36,7 +42,9 @@ public class DBConfiguration {
     public static Connection getConnection() {
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection(MessageConstants.DB_URL, MessageConstants.USER, MessageConstants.PASS);
+            conn =
+                    DriverManager.getConnection(
+                            MessageConstants.DB_URL, MessageConstants.USER, MessageConstants.PASS);
         } catch (SQLException e) {
             e.printStackTrace();
         }

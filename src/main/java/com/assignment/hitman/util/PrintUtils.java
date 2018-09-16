@@ -3,7 +3,11 @@ package com.assignment.hitman.util;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-/** @author ashutoshp */
+/**
+ * Utility method to print ascii images.
+ *
+ * @author ashutoshp
+ */
 public class PrintUtils {
     public static void drawString(String text, String artChar, Settings settings) {
         BufferedImage image = getImageIntegerMode(settings.width, settings.height);

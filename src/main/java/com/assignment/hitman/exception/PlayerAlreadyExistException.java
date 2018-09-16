@@ -1,6 +1,10 @@
 package com.assignment.hitman.exception;
 
-/** @author ashutoshp */
+/**
+ * This exception is thrown when player with the same name is being created.
+ *
+ * @author ashutoshp
+ */
 public class PlayerAlreadyExistException extends Exception {
 
     private static final long serialVersionUID = 8156669723722341237L;

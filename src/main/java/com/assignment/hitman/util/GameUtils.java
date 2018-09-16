@@ -6,14 +6,13 @@ import com.assignment.hitman.reader.ReaderFactory;
 import com.assignment.hitman.writer.Writer;
 import com.assignment.hitman.writer.WriterFactory;
 
+import java.awt.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 /**
- * Graceful shutdown mechanism to make sure all the application resources are cleaned up before JVM
- * is closed.
- *
+ * Utility methods which are used across the application.
  * @author ashutoshp
  */
 public class GameUtils {
@@ -21,6 +20,10 @@ public class GameUtils {
     private static Reader reader = ReaderFactory.getReader();
     private static Writer writer = WriterFactory.getWriter();
 
+    /**
+     * Graceful shutdown mechanism to make sure all the application resources are cleaned up before JVM
+     * is closed.
+     */
     public static void stopGame() {
         DBConfiguration.stopDB();
         reader.dispose();
@@ -36,5 +39,11 @@ public class GameUtils {
     public static void printOptions(List<String> options) {
         IntStream.range(0, options.size())
                 .forEach(i -> writer.writeInputMsg(i + 1 + " - " + options.get(i)));
+    }
+
+    public static void printAscIiImage(String text) {
+        PrintUtils.Settings settings =
+                new PrintUtils.Settings(new Font("SansSerif", Font.BOLD, 24), text.length() * 30, 30);
+        PrintUtils.drawString(text, "*", settings);
     }
 }
