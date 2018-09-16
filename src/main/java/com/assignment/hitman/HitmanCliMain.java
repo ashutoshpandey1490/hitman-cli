@@ -4,11 +4,9 @@ import com.assignment.hitman.controller.GameController;
 import com.assignment.hitman.database.DBConfiguration;
 import com.assignment.hitman.util.GameUtils;
 import com.assignment.hitman.util.MessageConstants;
-import com.assignment.hitman.util.PrintUtils;
 import com.assignment.hitman.writer.Writer;
 import com.assignment.hitman.writer.WriterFactory;
 
-import java.awt.*;
 import java.sql.SQLException;
 
 /**
