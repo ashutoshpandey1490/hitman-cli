@@ -45,5 +45,6 @@ public class DBConfiguration {
 
     public static void stopDB() {
         server.stop();
+        server = null;
     }
 }

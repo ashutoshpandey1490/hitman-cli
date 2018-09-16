@@ -31,7 +31,7 @@ public interface MessageConstants {
             "You bought %s. %s dollars has been deducted from your account. Your remaining balance is %s";
     String PLAYER_SAVED = "Player has been saved successfully";
     String PLAYER_HEALTH = "You health right now is %s";
-    String CONTINUE = "1 - Play another game";
+    String CONTINUE = "Play another game";
 
     String UPGRADE_LEVEL =
             "Now, you are at level %s. You have won $1000 and it has been credited to your account. You can change \n"

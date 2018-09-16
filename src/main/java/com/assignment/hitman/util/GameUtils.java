@@ -10,7 +10,12 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
-/** @author ashutoshp */
+/**
+ * Graceful shutdown mechanism to make sure all the application resources are cleaned up before JVM
+ * is closed.
+ *
+ * @author ashutoshp
+ */
 public class GameUtils {
 
     private static Reader reader = ReaderFactory.getReader();

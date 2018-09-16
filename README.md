@@ -13,6 +13,10 @@ Hitman game in java based on cli.
 - If player looses in higher level then they will have to start from beginning.
 - Input validation is performed at each level.
 
+## Possible enhancements
+- Users can be allowed to have multiple weapons at the same time and they should be able to change it while hitting the system player. 
+- Users can be allowed to add custom weapons.
+
 ## To generate the jar
 - mvn clean package (You must have maven installed)
 

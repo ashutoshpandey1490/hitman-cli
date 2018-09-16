@@ -16,7 +16,11 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-/** @author ashutoshp */
+/**
+ * All weapon related operations are performed in this class. A singleton implementation.
+ *
+ * @author ashutoshp
+ */
 public class WeaponController {
 
     private WeaponController() {}
@@ -35,11 +39,7 @@ public class WeaponController {
     public void buyWeapon(Player player) throws SQLException {
         List<Weapon> weaponsList = WeaponDaoImpl.getInstance().getAllWeapons();
         writer.writeInfoMsg(MessageConstants.WEAPON_BUY_MSG);
-        IntStream.range(0, weaponsList.size())
-                .forEach(
-                        i ->
-                                writer.writeInputMsg(
-                                        weaponsList.get(i).getId() + " - " + weaponsList.get(i).toString()));
+        printWeaponList(weaponsList);
         writer.writeInputMsg(weaponsList.size() + 1 + " - " + MessageConstants.GO_BACK);
         int input = reader.readInt();
         boolean isValidInput =
@@ -73,8 +73,18 @@ public class WeaponController {
         }
     }
 
+    private void printWeaponList(List<Weapon> weaponsList) {
+        IntStream.range(0, weaponsList.size())
+                .forEach(
+                        i ->
+                                writer.writeInputMsg(
+                                        weaponsList.get(i).getId() + " - " + weaponsList.get(i).toString()));
+    }
+
     /**
-     * System user must have randomly selected weapon but it must be of same level as the player
+     * System user must have randomly selected weapon but it must be of same level as the player to
+     * make the game fare.
+     *
      * @param user
      * @return randomly selected weapon
      * @throws SQLException

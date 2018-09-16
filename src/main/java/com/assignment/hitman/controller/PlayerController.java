@@ -16,7 +16,11 @@ import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/** @author ashutoshp */
+/**
+ * All player related operations are performed in this class. A singleton implementation.
+ *
+ * @author ashutoshp
+ */
 public class PlayerController {
 
     private PlayerController() {}
@@ -116,7 +120,7 @@ public class PlayerController {
             {
                 Player systemPlayer = initializeSystemPlayer(player);
                 player = initializePlayer(player);
-                startSystemPlayerJouney(player, systemPlayer);
+                startSystemPlayerJourney(player, systemPlayer);
                 startFight(player, systemPlayer);
                 break;
             }
@@ -129,7 +133,7 @@ public class PlayerController {
         }
     }
 
-    public void startFight(Player player, Player systemPlayer) throws SQLException {
+    private void startFight(Player player, Player systemPlayer) throws SQLException {
         GameUtils.printOptions(StartFight.getValues());
         writer.writeInfoMsg(MessageConstants.PLAYER_HEALTH, player.getHealth());
         int input = reader.readInt();
@@ -171,7 +175,19 @@ public class PlayerController {
         }
     }
 
-    public void startSystemPlayerJouney(Player userPlayer, Player systemPlayer) {
+    /**
+     * This method creates a new Thread which simulates system player. Initial delay is given before
+     * system player starts hitting user player. There is "hit_value" defined for each weapon. Each
+     * time system player hits user player, their health would be reduced by the amount of weapon's
+     * hit value. There is delay of at least one second between consecutive hits to the user player to
+     * make the game fare. Before hitting the user player, it checks whether user player has already
+     * won or if user player has pressed the "Exit" option. This mechanism is handled by two {@link
+     * AtomicBoolean} variables {@code hasPlayerWon} and {@code isInterrupted};
+     *
+     * @param userPlayer
+     * @param systemPlayer
+     */
+    private void startSystemPlayerJourney(Player userPlayer, Player systemPlayer) {
         Runnable runnable =
                 () -> {
                     // Initial delay to make it fare for the player
@@ -197,7 +213,7 @@ public class PlayerController {
         new Thread(runnable, MessageConstants.SYSTEM_PLAYER).start();
     }
 
-    public void saveProgress(Player player, Player systemPlayer) throws SQLException {
+    private void saveProgress(Player player, Player systemPlayer) throws SQLException {
         String answer = reader.readString();
         switch (answer.toLowerCase()) {
             case "y":
@@ -221,7 +237,7 @@ public class PlayerController {
         }
     }
 
-    public void viewPlayer(Player player) throws SQLException {
+    private void viewPlayer(Player player) throws SQLException {
         player.setCurrentWeapon(WeaponController.getInstance().getWeaponById(player.getWeaponId()));
         writer.writeInfoMsg(player.toString());
         GameUtils.printOptions(ViewPlayer.getValues());
@@ -244,9 +260,8 @@ public class PlayerController {
         // Both must be at the same level
         systemPlayer.setLevel(user.getLevel());
         WeaponController weaponController = WeaponController.getInstance();
-        if (user.getOpponentHealth() != null && user.getOpponentHealth() != 0) {
+        if (user.getOpponentHealth() != null && user.getOpponentWeaponId() != 0) {
             systemPlayer.setHealth(user.getOpponentHealth());
-            systemPlayer.setWeaponId(user.getWeaponId());
             systemPlayer.setCurrentWeapon(weaponController.getSystemWeapon(user));
         } else {
             systemPlayer.setCurrentWeapon(weaponController.getSystemWeapon(user));
@@ -262,7 +277,7 @@ public class PlayerController {
         return player;
     }
 
-    public void continueGame(Player player) throws SQLException {
+    private void continueGame(Player player) throws SQLException {
         GameUtils.printOptions(ContinueGame.getValues());
         Integer input = reader.readInt();
         if (ContinueGame.getOptionByKey(input) == null) {
@@ -288,10 +303,10 @@ public class PlayerController {
         }
     }
 
-    public void upgradeLevel(Player player) throws SQLException {
+    private void upgradeLevel(Player player) throws SQLException {
         if (player.getLevel() == 3) {
             writer.writeInfoMsg(MessageConstants.WON_SERIES);
-            GameUtils.stopGame();
+            GameController.getInstance().resumeGame();
         }
         Level level = Level.getLevelFromValue(player.getLevel() + 1);
         player.setLevel(level.getValue());
@@ -312,7 +327,7 @@ public class PlayerController {
         }
     }
 
-    public Integer getCountOfPlayer() {
+    Integer getCountOfPlayer() {
         return PlayerDaoImpl.getInstance().getPlayerCount();
     }
 }

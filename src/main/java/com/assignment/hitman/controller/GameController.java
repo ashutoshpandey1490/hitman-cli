@@ -11,7 +11,11 @@ import com.assignment.hitman.writer.WriterFactory;
 
 import java.sql.SQLException;
 
-/** @author ashutoshp */
+/**
+ * Starting point of the game. Singleton implementation.
+ *
+ * @author ashutoshp
+ */
 public class GameController {
 
   private GameController() {}
@@ -27,6 +31,11 @@ public class GameController {
   private static final Writer writer = WriterFactory.getWriter();
   private static final Reader reader = ReaderFactory.getReader();
 
+  /**
+   * If there is any player record in DB then "Resume game" option is displayed.
+   *
+   * @throws SQLException
+   */
   public void startGame() throws SQLException {
     Integer playerCount = PlayerController.getInstance().getCountOfPlayer();
     if (playerCount > 0) {
