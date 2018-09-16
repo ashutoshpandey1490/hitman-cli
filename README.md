@@ -5,7 +5,7 @@ Hitman game in java based on cli.
 - Player can create new player and start the game.
 - Weapons can be changed depending on the money.
 - User can view their details.
-- There are 3 levels in the game which player needs to win to win the series.
+- There are 3 levels in the game which player needs to cross to win the series.
 - With each level, player gets money credited in their account which can be used to buy new weapons.
 - As soon as the game starts, system and player start hitting each other.
 - System player will hit the player at fixed speed whereas player can hit the system player as fast as possible.
@@ -24,8 +24,11 @@ Hitman game in java based on cli.
 - Unix users: ./mvnw clean package
 - Windows users: mvnw.cmd clean package
 
-## To run the app in terminal.
+## To run the app in windows.
 - java -Dcolored=false -jar target/hitman-cli-1.0-SNAPSHOT-jar-with-dependencies.jar
 
-## To get colorful fonts
+## To run app with colors in unix based system.
+- java -jar target/hitman-cli-1.0-SNAPSHOT-jar-with-dependencies.jar
+
+## To get colorful fonts in windows
 - Directly run the main class in 'IntelliJ'. (They have support for ascii color codes)

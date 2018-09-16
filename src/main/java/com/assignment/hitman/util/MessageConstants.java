@@ -28,7 +28,7 @@ public interface MessageConstants {
     String INSUFFICIENT_BALANCE =
             "You don't have sufficient balance. You have only $%s in your account. Please choose appropriate weapon";
     String WEAPON_BUY_SUCC_MSG =
-            "You bought %s. %s dollars has been deducted from your account. Your remaining balance is %s";
+            "You bought %s. %s dollars have been deducted from your account. Your remaining balance is %s dollars.";
     String PLAYER_SAVED = "Player has been saved successfully";
     String PLAYER_HEALTH = "You health right now is %s";
     String CONTINUE = "Play another game";

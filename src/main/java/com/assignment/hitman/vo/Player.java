@@ -23,7 +23,7 @@ public class Player {
                 + "  name='"
                 + name
                 + '\''
-                + ", money="
+                + ", money=$"
                 + money
                 + ", health="
                 + health

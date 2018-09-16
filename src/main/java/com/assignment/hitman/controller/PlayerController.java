@@ -306,6 +306,9 @@ public class PlayerController {
     private void upgradeLevel(Player player) throws SQLException {
         if (player.getLevel() == 3) {
             writer.writeInfoMsg(MessageConstants.WON_SERIES);
+            // Reset the player after series win
+            player.setLevel(1).setMoney(150).setHealth(100).setWeaponId(2);
+            PlayerDaoImpl.getInstance().updateExistingPlayer(player);
             GameController.getInstance().resumeGame();
         }
         Level level = Level.getLevelFromValue(player.getLevel() + 1);

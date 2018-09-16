@@ -74,7 +74,7 @@ public class Weapon {
                 + '\''
                 + ", Price=$"
                 + price
-                + '}';
+                + " }";
     }
 
     public Weapon setHitValue(Integer hitValue) {

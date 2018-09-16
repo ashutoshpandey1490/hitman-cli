@@ -1,5 +1,6 @@
 package com.assignment.hitman.reader;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -14,7 +15,14 @@ public class ConsoleReader implements Reader {
 
     @Override
     public int readInt() {
-        return scanner.nextInt();
+        int value;
+        try {
+            value = scanner.nextInt();
+        } catch (InputMismatchException exp) {
+            scanner.nextLine();
+            value = -1;
+        }
+        return value;
     }
 
     @Override
